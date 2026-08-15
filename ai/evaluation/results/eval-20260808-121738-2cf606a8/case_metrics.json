@@ -1,0 +1,198 @@
+[
+  {
+    "case_id": "eval-001",
+    "description": "I want to build a firewall and network monitoring system for a college campus with separate student, faculty, laboratory and administrative networks.",
+    "expected_categories": [
+      "CAT-02",
+      "CAT-03"
+    ],
+    "latency": {
+      "analysis_seconds": 0.0,
+      "clarification_seconds": 0.0157926082611084,
+      "srs_seconds": 0.0,
+      "total_seconds": 0.0157926082611084
+    },
+    "retry_counts": {
+      "analysis": 0,
+      "clarification": 0,
+      "srs": 0
+    },
+    "success": {
+      "analysis": true,
+      "clarification": true,
+      "srs": true
+    },
+    "analysis": {
+      "json_valid": true,
+      "schema_valid": false,
+      "inferred_categories": [
+        "CAT-01"
+      ],
+      "category_accuracy": 0.0,
+      "missing_info_count": 2
+    },
+    "clarification": {
+      "json_valid": true,
+      "schema_valid": false,
+      "question_count": 2,
+      "questions_have_target_gap": 2,
+      "questions_have_reason": 2
+    },
+    "srs": {
+      "json_valid": true,
+      "schema_valid": false,
+      "requirement_count": 9,
+      "duplicate_requirement_ids": [],
+      "missing_statements": 0,
+      "missing_acceptance_criteria": 0,
+      "invalid_priorities": 0,
+      "requirements_by_category": {
+        "functional": 3,
+        "non_functional": 2,
+        "security": 2,
+        "data": 1,
+        "network": 1
+      },
+      "threat_count": 2,
+      "has_architecture": true,
+      "has_testing_strategy": true,
+      "has_risks": true
+    },
+    "errors": {
+      "analysis": "Schema validation failed: name 'ProjectAnalysis' is not defined",
+      "clarification": "Schema validation failed: name 'ClarificationQuestionSet' is not defined",
+      "srs": "Schema validation failed: name 'SRSSchema' is not defined"
+    }
+  },
+  {
+    "case_id": "eval-002",
+    "description": "Design an enterprise-grade next-generation firewall for a 5,000 employee organization with multiple branch offices. Must support application-layer inspection, SSL decryption, and centralized management.",
+    "expected_categories": [
+      "CAT-02",
+      "CAT-03",
+      "CAT-08"
+    ],
+    "latency": {
+      "analysis_seconds": 0.0047419071197509766,
+      "clarification_seconds": 0.010892868041992188,
+      "srs_seconds": 0.015932083129882812,
+      "total_seconds": 0.03156685829162598
+    },
+    "retry_counts": {
+      "analysis": 0,
+      "clarification": 0,
+      "srs": 0
+    },
+    "success": {
+      "analysis": true,
+      "clarification": true,
+      "srs": true
+    },
+    "analysis": {
+      "json_valid": true,
+      "schema_valid": false,
+      "inferred_categories": [
+        "CAT-01"
+      ],
+      "category_accuracy": 0.0,
+      "missing_info_count": 2
+    },
+    "clarification": {
+      "json_valid": true,
+      "schema_valid": false,
+      "question_count": 2,
+      "questions_have_target_gap": 2,
+      "questions_have_reason": 2
+    },
+    "srs": {
+      "json_valid": true,
+      "schema_valid": false,
+      "requirement_count": 9,
+      "duplicate_requirement_ids": [],
+      "missing_statements": 0,
+      "missing_acceptance_criteria": 0,
+      "invalid_priorities": 0,
+      "requirements_by_category": {
+        "functional": 3,
+        "non_functional": 2,
+        "security": 2,
+        "data": 1,
+        "network": 1
+      },
+      "threat_count": 2,
+      "has_architecture": true,
+      "has_testing_strategy": true,
+      "has_risks": true
+    },
+    "errors": {
+      "analysis": "Schema validation failed: name 'ProjectAnalysis' is not defined",
+      "clarification": "Schema validation failed: name 'ClarificationQuestionSet' is not defined",
+      "srs": "Schema validation failed: name 'SRSSchema' is not defined"
+    }
+  },
+  {
+    "case_id": "eval-003",
+    "description": "Build a network intrusion detection system that monitors traffic for suspicious patterns and generates alerts. Should support signature-based and anomaly-based detection.",
+    "expected_categories": [
+      "CAT-03"
+    ],
+    "latency": {
+      "analysis_seconds": 0.012001276016235352,
+      "clarification_seconds": 0.0,
+      "srs_seconds": 0.00713801383972168,
+      "total_seconds": 0.01913928985595703
+    },
+    "retry_counts": {
+      "analysis": 0,
+      "clarification": 0,
+      "srs": 0
+    },
+    "success": {
+      "analysis": true,
+      "clarification": true,
+      "srs": true
+    },
+    "analysis": {
+      "json_valid": true,
+      "schema_valid": false,
+      "inferred_categories": [
+        "CAT-04",
+        "CAT-07"
+      ],
+      "category_accuracy": 0.0,
+      "missing_info_count": 2
+    },
+    "clarification": {
+      "json_valid": true,
+      "schema_valid": false,
+      "question_count": 2,
+      "questions_have_target_gap": 2,
+      "questions_have_reason": 2
+    },
+    "srs": {
+      "json_valid": true,
+      "schema_valid": false,
+      "requirement_count": 9,
+      "duplicate_requirement_ids": [],
+      "missing_statements": 0,
+      "missing_acceptance_criteria": 0,
+      "invalid_priorities": 0,
+      "requirements_by_category": {
+        "functional": 3,
+        "non_functional": 2,
+        "security": 2,
+        "data": 1,
+        "network": 1
+      },
+      "threat_count": 2,
+      "has_architecture": true,
+      "has_testing_strategy": true,
+      "has_risks": true
+    },
+    "errors": {
+      "analysis": "Schema validation failed: name 'ProjectAnalysis' is not defined",
+      "clarification": "Schema validation failed: name 'ClarificationQuestionSet' is not defined",
+      "srs": "Schema validation failed: name 'SRSSchema' is not defined"
+    }
+  }
+]

@@ -1,0 +1,17 @@
+{
+  "run_id": "eval-20260808-223930-7b320dbf",
+  "timestamp": "2026-08-08T22:39:30.119188+00:00",
+  "provider": "mock",
+  "model_name": "cybersrs-mock-1b",
+  "embedding_model": "nomic-embed-text",
+  "vector_db": "ChromaDB",
+  "dataset_path": "ai/evaluation/dataset.json",
+  "total_cases_base": 3,
+  "total_cases_rag": 3,
+  "rag_config": {
+    "enabled": true,
+    "top_k": 10,
+    "min_score": 0.3,
+    "collection": "cybersrs_knowledge"
+  }
+}

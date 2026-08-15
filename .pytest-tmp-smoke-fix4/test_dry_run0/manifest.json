@@ -1,0 +1,1 @@
+{"documents": [{"source_id": "test-doc", "title": "Test Document", "organization": "Test Org", "version": "1.0", "publication_date": "2024-01-01", "retrieval_date": "2024-01-01", "source_url": "http://example.com", "local_path": "raw/test/test.txt", "sha256": "abc123", "size_bytes": 100, "purpose": "Test", "packaged": true, "license_note": "test"}]}

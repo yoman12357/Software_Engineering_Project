@@ -1,0 +1,60 @@
+{
+  "evaluation_run_id": "phase5-20260814-065650-e02d5826",
+  "status": "COMPLETED",
+  "started_at": "2026-08-14T06:56:50.595879+00:00",
+  "completed_at": "2026-08-14T06:56:50.890897+00:00",
+  "dataset": "C:/Users/Aryan Bokolia/Desktop/SoftwareEngineering/.pytest_tmp_audit/test_runner_writes_portable_ar0/heldout.json",
+  "held_out_case_count": 1,
+  "configurations": [
+    {
+      "configuration": "BASE",
+      "model_variant": "base",
+      "rag_enabled": false,
+      "status": "COMPLETED",
+      "total_cases": 1,
+      "successful_cases": 1,
+      "generation_success_rate": 1.0,
+      "raw_metrics": {
+        "schema_valid": 1.0,
+        "requirement_count": 9.0,
+        "functional_requirement_count": 3.0,
+        "security_requirement_count": 2.0,
+        "threat_count": 0.0,
+        "clarification_count": 2.0,
+        "double_shall_violations": 0.0,
+        "missing_acceptance_criteria": 0.0,
+        "unsupported_numeric_claims": 0.0,
+        "numeric_provenance_violations": 0.0,
+        "generic_rationale_violations": 0.0,
+        "citation_presence_rate": 0.0,
+        "invalid_citation_count": 0.0,
+        "retrieved_chunk_count": 0.0
+      },
+      "final_metrics": {
+        "schema_valid": 1.0,
+        "requirement_count": 9.0,
+        "functional_requirement_count": 3.0,
+        "security_requirement_count": 2.0,
+        "threat_count": 0.0,
+        "clarification_count": 2.0,
+        "double_shall_violations": 0.0,
+        "missing_acceptance_criteria": 0.0,
+        "unsupported_numeric_claims": 0.0,
+        "numeric_provenance_violations": 0.0,
+        "generic_rationale_violations": 0.0,
+        "citation_presence_rate": 0.0,
+        "invalid_citation_count": 0.0,
+        "retrieved_chunk_count": 0.0
+      },
+      "latency": {
+        "analysis_seconds": 0.019906399975297973,
+        "clarification_seconds": 0.02061499998671934,
+        "srs_seconds": 0.027909700002055615,
+        "total_seconds": 0.11592179999570362
+      },
+      "evaluation_run_id": "phase5-20260814-065650-e02d5826-base",
+      "model_name": "qwen3:4b-instruct-2507-q4_K_M",
+      "error": null
+    }
+  ]
+}

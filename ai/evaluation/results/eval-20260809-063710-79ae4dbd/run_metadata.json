@@ -1,0 +1,17 @@
+{
+  "run_id": "eval-20260809-063710-79ae4dbd",
+  "timestamp": "2026-08-09T06:37:10.444140+00:00",
+  "provider": "ollama",
+  "model_name": "qwen3:4b-instruct-2507-q4_K_M",
+  "embedding_model": "nomic-embed-text",
+  "vector_db": "ChromaDB",
+  "dataset_path": "ai/evaluation/dataset.json",
+  "total_cases_base": 3,
+  "total_cases_rag": 3,
+  "rag_config": {
+    "enabled": true,
+    "top_k": 10,
+    "min_score": 0.3,
+    "collection": "cybersrs_knowledge"
+  }
+}

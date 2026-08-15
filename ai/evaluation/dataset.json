@@ -1,0 +1,242 @@
+[
+  {
+    "id": "eval-001",
+    "category": "college_firewall",
+    "description": "I want to build a firewall and network monitoring system for a college campus with separate student, faculty, laboratory and administrative networks.",
+    "expected_categories": ["CAT-02", "CAT-03"],
+    "length": "detailed",
+    "notes": "Standard campus firewall with network segmentation"
+  },
+  {
+    "id": "eval-002",
+    "category": "enterprise_firewall",
+    "description": "Design an enterprise-grade next-generation firewall for a 5,000 employee organization with multiple branch offices. Must support application-layer inspection, SSL decryption, and centralized management.",
+    "expected_categories": ["CAT-02", "CAT-03", "CAT-08"],
+    "length": "detailed",
+    "notes": "Enterprise NGFW with multi-site management"
+  },
+  {
+    "id": "eval-003",
+    "category": "ids",
+    "description": "Build a network intrusion detection system that monitors traffic for suspicious patterns and generates alerts. Should support signature-based and anomaly-based detection.",
+    "expected_categories": ["CAT-03"],
+    "length": "detailed",
+    "notes": "Pure IDS (detection only, no blocking)"
+  },
+  {
+    "id": "eval-004",
+    "category": "network_monitoring",
+    "description": "Create a network traffic monitoring platform for a mid-size company. Need flow collection, bandwidth analysis, and anomalous traffic detection.",
+    "expected_categories": ["CAT-03", "CAT-07"],
+    "length": "detailed",
+    "notes": "Monitoring and alerting focused"
+  },
+  {
+    "id": "eval-005",
+    "category": "secure_api_gateway",
+    "description": "Design a secure API gateway for a fintech startup. Must handle authentication (OAuth 2.0, API keys), rate limiting, input validation, and protect against OWASP API Top 10 risks.",
+    "expected_categories": ["CAT-05"],
+    "length": "detailed",
+    "notes": "API security focus with OAuth 2.0"
+  },
+  {
+    "id": "eval-006",
+    "category": "vpn",
+    "description": "Build a zero-trust VPN replacement for remote access. Should support device posture checking, identity-aware access, and micro-segmentation for 2000 remote employees.",
+    "expected_categories": ["CAT-06", "CAT-08"],
+    "length": "detailed",
+    "notes": "Zero-trust network access (ZTNA)"
+  },
+  {
+    "id": "eval-007",
+    "category": "iam",
+    "description": "Design an identity and access management system for a healthcare provider with 5000 staff. Must support SSO, MFA, RBAC, user provisioning, and audit logging for HIPAA compliance.",
+    "expected_categories": ["CAT-04"],
+    "length": "detailed",
+    "notes": "IAM with healthcare compliance requirements"
+  },
+  {
+    "id": "eval-008",
+    "category": "rbac_portal",
+    "description": "Create a role-based access control portal for internal applications. Support dynamic role assignment, approval workflows, and periodic access reviews.",
+    "expected_categories": ["CAT-04"],
+    "length": "detailed",
+    "notes": "RBAC management portal"
+  },
+  {
+    "id": "eval-009",
+    "category": "security_logging",
+    "description": "Implement a centralized security logging and SIEM-like platform. Collect logs from firewalls, servers, applications. Support correlation rules, dashboards, and alerting.",
+    "expected_categories": ["CAT-03", "CAT-07"],
+    "length": "detailed",
+    "notes": "SIEM / security logging platform"
+  },
+  {
+    "id": "eval-010",
+    "category": "siem",
+    "description": "Build a security information and event management system for a financial services firm. Ingest 100GB/day, real-time correlation, compliance reporting for SOX/PCI-DSS.",
+    "expected_categories": ["CAT-03", "CAT-07"],
+    "length": "detailed",
+    "notes": "High-volume SIEM with compliance focus"
+  },
+  {
+    "id": "eval-011",
+    "category": "zero_trust",
+    "description": "Design a zero-trust network architecture for a cloud-first organization. Identity-based segmentation, continuous verification, least-privilege access for all workloads.",
+    "expected_categories": ["CAT-08", "CAT-04"],
+    "length": "detailed",
+    "notes": "Zero-trust architecture"
+  },
+  {
+    "id": "eval-012",
+    "category": "remote_access",
+    "description": "Create a secure remote access platform for contractors and vendors. Time-limited access, session recording, just-in-time privileged access.",
+    "expected_categories": ["CAT-06", "CAT-04"],
+    "length": "detailed",
+    "notes": "Privileged remote access / PAM"
+  },
+  {
+    "id": "eval-013",
+    "category": "segmented_campus",
+    "description": "Segment a university campus network into security zones: student, faculty, research, admin, IoT. Inter-zone firewalling, NAC, and monitoring.",
+    "expected_categories": ["CAT-02", "CAT-08", "CAT-03"],
+    "length": "detailed",
+    "notes": "Campus network segmentation"
+  },
+  {
+    "id": "eval-014",
+    "category": "cloud_gateway",
+    "description": "Design a cloud security gateway for AWS/Azure workloads. Inspect east-west traffic, enforce cloud-native security policies, integrate with CSPM.",
+    "expected_categories": ["CAT-05", "CAT-08"],
+    "length": "detailed",
+    "notes": "Cloud security gateway"
+  },
+  {
+    "id": "eval-015",
+    "category": "admin_portal",
+    "description": "Build a secure internal administration portal for managing infrastructure. Bastion host replacement, privileged session management, audit trail.",
+    "expected_categories": ["CAT-04", "CAT-06"],
+    "length": "detailed",
+    "notes": "Admin portal / bastion replacement"
+  },
+  {
+    "id": "eval-016",
+    "category": "file_sharing",
+    "description": "Create a secure file sharing platform for external collaboration. End-to-end encryption, DLP, watermarking, access expiration, audit logging.",
+    "expected_categories": ["CAT-05", "CAT-04"],
+    "length": "detailed",
+    "notes": "Secure file sharing with DLP"
+  },
+  {
+    "id": "eval-017",
+    "category": "network_access_control",
+    "description": "Design a network access control system for BYOD and IoT devices. Device profiling, posture assessment, VLAN assignment, guest network isolation.",
+    "expected_categories": ["CAT-02", "CAT-08"],
+    "length": "detailed",
+    "notes": "NAC for BYOD/IoT"
+  },
+  {
+    "id": "eval-018",
+    "category": "incident_reporting",
+    "description": "Build an incident reporting and tracking system for security team. Automated enrichment, playbook integration, SLA tracking, regulatory notification.",
+    "expected_categories": ["CAT-07", "CAT-03"],
+    "length": "detailed",
+    "notes": "Security incident management"
+  },
+  {
+    "id": "eval-019",
+    "category": "college_firewall_short",
+    "description": "Firewall for college campus network.",
+    "expected_categories": ["CAT-02", "CAT-03"],
+    "length": "short",
+    "notes": "Minimal description - tests handling of sparse input"
+  },
+  {
+    "id": "eval-020",
+    "category": "api_gateway_short",
+    "description": "API gateway with auth and rate limiting.",
+    "expected_categories": ["CAT-05"],
+    "length": "short",
+    "notes": "Very brief description"
+  },
+  {
+    "id": "eval-021",
+    "category": "vpn_short",
+    "description": "VPN for remote workers.",
+    "expected_categories": ["CAT-06"],
+    "length": "short",
+    "notes": "Minimal VPN description"
+  },
+  {
+    "id": "eval-022",
+    "category": "ambiguous_1",
+    "description": "We need a security system for our network that protects against hackers and monitors traffic.",
+    "expected_categories": ["CAT-02", "CAT-03"],
+    "length": "ambiguous",
+    "notes": "Vague - should generate clarification questions"
+  },
+  {
+    "id": "eval-023",
+    "category": "ambiguous_2",
+    "description": "Build something that secures our APIs and manages user access.",
+    "expected_categories": ["CAT-04", "CAT-05"],
+    "length": "ambiguous",
+    "notes": "Conflates IAM and API gateway"
+  },
+  {
+    "id": "eval-024",
+    "category": "incomplete_1",
+    "description": "Firewall for a hospital network with patient data.",
+    "expected_categories": ["CAT-02", "CAT-04"],
+    "length": "incomplete",
+    "notes": "Missing scale, compliance details, segmentation needs"
+  },
+  {
+    "id": "eval-025",
+    "category": "incomplete_2",
+    "description": "Monitoring system for cloud infrastructure.",
+    "expected_categories": ["CAT-03", "CAT-07"],
+    "length": "incomplete",
+    "notes": "Missing cloud provider, volume, alerting requirements"
+  },
+  {
+    "id": "eval-026",
+    "category": "ids_ips",
+    "description": "Build an intrusion prevention system that not only detects but actively blocks malicious network traffic. Inline deployment, high availability, custom signature support.",
+    "expected_categories": ["CAT-02", "CAT-03"],
+    "length": "detailed",
+    "notes": "IPS (active blocking) vs IDS"
+  },
+  {
+    "id": "eval-027",
+    "category": "waf",
+    "description": "Design a web application firewall for protecting e-commerce applications. OWASP Top 10 protection, bot mitigation, API protection, virtual patching.",
+    "expected_categories": ["CAT-05"],
+    "length": "detailed",
+    "notes": "WAF for web applications"
+  },
+  {
+    "id": "eval-028",
+    "category": "email_security",
+    "description": "Create an email security gateway for phishing protection, malware scanning, DLP, and encryption. Integrate with Office 365 and Google Workspace.",
+    "expected_categories": ["CAT-05"],
+    "length": "detailed",
+    "notes": "Email security gateway"
+  },
+  {
+    "id": "eval-029",
+    "category": "dlp",
+    "description": "Build a data loss prevention system for endpoint and network. Content inspection, classification, policy enforcement, cloud storage monitoring.",
+    "expected_categories": ["CAT-05", "CAT-07"],
+    "length": "detailed",
+    "notes": "DLP system"
+  },
+  {
+    "id": "eval-030",
+    "category": "threat_intel",
+    "description": "Design a threat intelligence platform that aggregates feeds, enriches indicators, supports STIX/TAXII, and integrates with SIEM and firewall blocklists.",
+    "expected_categories": ["CAT-03", "CAT-07"],
+    "length": "detailed",
+    "notes": "Threat intelligence platform"
+  }
+]

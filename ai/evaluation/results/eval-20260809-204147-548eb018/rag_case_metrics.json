@@ -1,0 +1,200 @@
+[
+  {
+    "case_id": "eval-001",
+    "description": "I want to build a firewall and network monitoring system for a college campus with separate student, faculty, laboratory and administrative networks.",
+    "expected_categories": [
+      "CAT-02",
+      "CAT-03"
+    ],
+    "latency": {
+      "analysis_seconds": 6.9432532787323,
+      "clarification_seconds": 5.434641361236572,
+      "srs_seconds": 87.36369895935059,
+      "total_seconds": 99.74159359931946
+    },
+    "retry_counts": {
+      "analysis": 0,
+      "clarification": 0,
+      "srs": 0
+    },
+    "success": {
+      "analysis": true,
+      "clarification": true,
+      "srs": true
+    },
+    "analysis": {
+      "json_valid": true,
+      "schema_valid": true,
+      "inferred_categories": [
+        "CAT-02",
+        "CAT-03"
+      ],
+      "category_accuracy": 1.0,
+      "missing_info_count": 3
+    },
+    "clarification": {
+      "json_valid": true,
+      "schema_valid": true,
+      "question_count": 3,
+      "questions_have_target_gap": 3,
+      "questions_have_reason": 3
+    },
+    "srs": {
+      "json_valid": true,
+      "schema_valid": true,
+      "requirement_count": 10,
+      "duplicate_requirement_ids": [],
+      "missing_statements": 0,
+      "missing_acceptance_criteria": 0,
+      "invalid_priorities": 0,
+      "requirements_by_category": {
+        "functional": 3,
+        "non_functional": 2,
+        "security": 2,
+        "data": 1,
+        "network": 2
+      },
+      "threat_count": 5,
+      "has_architecture": true,
+      "has_testing_strategy": false,
+      "has_risks": true
+    },
+    "errors": {
+      "analysis": null,
+      "clarification": null,
+      "srs": null
+    }
+  },
+  {
+    "case_id": "eval-005",
+    "description": "Design a secure API gateway for a fintech startup. Must handle authentication (OAuth 2.0, API keys), rate limiting, input validation, and protect against OWASP API Top 10 risks.",
+    "expected_categories": [
+      "CAT-05"
+    ],
+    "latency": {
+      "analysis_seconds": 9.017826795578003,
+      "clarification_seconds": 16.536665201187134,
+      "srs_seconds": 118.56510186195374,
+      "total_seconds": 144.11959385871887
+    },
+    "retry_counts": {
+      "analysis": 0,
+      "clarification": 0,
+      "srs": 0
+    },
+    "success": {
+      "analysis": true,
+      "clarification": true,
+      "srs": true
+    },
+    "analysis": {
+      "json_valid": true,
+      "schema_valid": true,
+      "inferred_categories": [
+        "CAT-05",
+        "CAT-04",
+        "CAT-03",
+        "CAT-07"
+      ],
+      "category_accuracy": 0.25,
+      "missing_info_count": 4
+    },
+    "clarification": {
+      "json_valid": true,
+      "schema_valid": true,
+      "question_count": 4,
+      "questions_have_target_gap": 4,
+      "questions_have_reason": 4
+    },
+    "srs": {
+      "json_valid": true,
+      "schema_valid": true,
+      "requirement_count": 14,
+      "duplicate_requirement_ids": [],
+      "missing_statements": 0,
+      "missing_acceptance_criteria": 0,
+      "invalid_priorities": 0,
+      "requirements_by_category": {
+        "functional": 5,
+        "non_functional": 3,
+        "security": 4,
+        "data": 1,
+        "network": 1
+      },
+      "threat_count": 5,
+      "has_architecture": true,
+      "has_testing_strategy": false,
+      "has_risks": true
+    },
+    "errors": {
+      "analysis": null,
+      "clarification": null,
+      "srs": null
+    }
+  },
+  {
+    "case_id": "eval-007",
+    "description": "Design an identity and access management system for a healthcare provider with 5000 staff. Must support SSO, MFA, RBAC, user provisioning, and audit logging for HIPAA compliance.",
+    "expected_categories": [
+      "CAT-04"
+    ],
+    "latency": {
+      "analysis_seconds": 7.940147638320923,
+      "clarification_seconds": 15.231391906738281,
+      "srs_seconds": 113.83051180839539,
+      "total_seconds": 137.0020513534546
+    },
+    "retry_counts": {
+      "analysis": 0,
+      "clarification": 0,
+      "srs": 0
+    },
+    "success": {
+      "analysis": true,
+      "clarification": true,
+      "srs": true
+    },
+    "analysis": {
+      "json_valid": true,
+      "schema_valid": true,
+      "inferred_categories": [
+        "CAT-04",
+        "CAT-07"
+      ],
+      "category_accuracy": 0.5,
+      "missing_info_count": 4
+    },
+    "clarification": {
+      "json_valid": true,
+      "schema_valid": true,
+      "question_count": 4,
+      "questions_have_target_gap": 4,
+      "questions_have_reason": 4
+    },
+    "srs": {
+      "json_valid": true,
+      "schema_valid": true,
+      "requirement_count": 13,
+      "duplicate_requirement_ids": [],
+      "missing_statements": 0,
+      "missing_acceptance_criteria": 0,
+      "invalid_priorities": 0,
+      "requirements_by_category": {
+        "functional": 5,
+        "non_functional": 3,
+        "security": 3,
+        "data": 1,
+        "network": 1
+      },
+      "threat_count": 5,
+      "has_architecture": true,
+      "has_testing_strategy": false,
+      "has_risks": true
+    },
+    "errors": {
+      "analysis": null,
+      "clarification": null,
+      "srs": null
+    }
+  }
+]

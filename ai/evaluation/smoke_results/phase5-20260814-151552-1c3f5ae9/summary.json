@@ -1,0 +1,24 @@
+{
+  "evaluation_run_id": "phase5-20260814-151552-1c3f5ae9",
+  "status": "UNAVAILABLE",
+  "started_at": "2026-08-14T15:15:52.009296+00:00",
+  "completed_at": "2026-08-14T15:15:52.362632+00:00",
+  "dataset": "C:/Users/Aryan Bokolia/Desktop/SoftwareEngineering/ai/evaluation/dataset.json",
+  "held_out_case_count": 1,
+  "configurations": [
+    {
+      "evaluation_run_id": "phase5-20260814-151552-1c3f5ae9-finetuned_rag",
+      "configuration": "FINETUNED_RAG",
+      "model_variant": "finetuned",
+      "model_name": "cybersrs-qwen3-4b-ft",
+      "rag_enabled": true,
+      "status": "UNAVAILABLE",
+      "error": "Ollama model 'cybersrs-qwen3-4b-ft' is unavailable",
+      "total_cases": 0,
+      "successful_cases": 0,
+      "raw_metrics": null,
+      "final_metrics": null,
+      "latency": null
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "evaluation_run_id": "phase5-20260814-151726-f8adceb8",
+  "status": "UNAVAILABLE",
+  "started_at": "2026-08-14T15:17:26.887815+00:00",
+  "completed_at": "2026-08-14T15:17:27.024053+00:00",
+  "dataset": "C:/Users/Aryan Bokolia/Desktop/SoftwareEngineering/.pytest_tmp_ft_phase5/test_unavailable_finetuned_con0/heldout.json",
+  "held_out_case_count": 1,
+  "configurations": [
+    {
+      "evaluation_run_id": "phase5-20260814-151726-f8adceb8-finetuned",
+      "configuration": "FINETUNED",
+      "model_variant": "finetuned",
+      "model_name": "cybersrs-qwen3-4b-ft",
+      "rag_enabled": false,
+      "status": "UNAVAILABLE",
+      "error": "model unavailable",
+      "total_cases": 0,
+      "successful_cases": 0,
+      "raw_metrics": null,
+      "final_metrics": null,
+      "latency": null
+    }
+  ]
+}

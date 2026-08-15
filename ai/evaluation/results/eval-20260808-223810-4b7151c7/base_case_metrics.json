@@ -1,0 +1,191 @@
+[
+  {
+    "case_id": "eval-001",
+    "description": "I want to build a firewall and network monitoring system for a college campus with separate student, faculty, laboratory and administrative networks.",
+    "expected_categories": [
+      "CAT-02",
+      "CAT-03"
+    ],
+    "latency": {
+      "analysis_seconds": 0.0,
+      "clarification_seconds": 0.0,
+      "srs_seconds": 0.0,
+      "total_seconds": 0.0
+    },
+    "retry_counts": {
+      "analysis": 0,
+      "clarification": 0,
+      "srs": 0
+    },
+    "success": {
+      "analysis": false,
+      "clarification": false,
+      "srs": false
+    },
+    "analysis": {
+      "json_valid": false,
+      "schema_valid": false,
+      "inferred_categories": [],
+      "category_accuracy": 0.0,
+      "missing_info_count": 0
+    },
+    "clarification": {
+      "json_valid": false,
+      "schema_valid": false,
+      "question_count": 0,
+      "questions_have_target_gap": 0,
+      "questions_have_reason": 0
+    },
+    "srs": {
+      "json_valid": false,
+      "schema_valid": false,
+      "requirement_count": 0,
+      "duplicate_requirement_ids": [],
+      "missing_statements": 0,
+      "missing_acceptance_criteria": 0,
+      "invalid_priorities": 0,
+      "requirements_by_category": {
+        "functional": 0,
+        "non_functional": 0,
+        "security": 0,
+        "data": 0,
+        "network": 0
+      },
+      "threat_count": 0,
+      "has_architecture": false,
+      "has_testing_strategy": false,
+      "has_risks": false
+    },
+    "errors": {
+      "analysis": "'str' object has no attribute 'value'",
+      "clarification": null,
+      "srs": null
+    }
+  },
+  {
+    "case_id": "eval-002",
+    "description": "Design an enterprise-grade next-generation firewall for a 5,000 employee organization with multiple branch offices. Must support application-layer inspection, SSL decryption, and centralized management.",
+    "expected_categories": [
+      "CAT-02",
+      "CAT-03",
+      "CAT-08"
+    ],
+    "latency": {
+      "analysis_seconds": 0.0,
+      "clarification_seconds": 0.0,
+      "srs_seconds": 0.0,
+      "total_seconds": 0.0
+    },
+    "retry_counts": {
+      "analysis": 0,
+      "clarification": 0,
+      "srs": 0
+    },
+    "success": {
+      "analysis": false,
+      "clarification": false,
+      "srs": false
+    },
+    "analysis": {
+      "json_valid": false,
+      "schema_valid": false,
+      "inferred_categories": [],
+      "category_accuracy": 0.0,
+      "missing_info_count": 0
+    },
+    "clarification": {
+      "json_valid": false,
+      "schema_valid": false,
+      "question_count": 0,
+      "questions_have_target_gap": 0,
+      "questions_have_reason": 0
+    },
+    "srs": {
+      "json_valid": false,
+      "schema_valid": false,
+      "requirement_count": 0,
+      "duplicate_requirement_ids": [],
+      "missing_statements": 0,
+      "missing_acceptance_criteria": 0,
+      "invalid_priorities": 0,
+      "requirements_by_category": {
+        "functional": 0,
+        "non_functional": 0,
+        "security": 0,
+        "data": 0,
+        "network": 0
+      },
+      "threat_count": 0,
+      "has_architecture": false,
+      "has_testing_strategy": false,
+      "has_risks": false
+    },
+    "errors": {
+      "analysis": "'str' object has no attribute 'value'",
+      "clarification": null,
+      "srs": null
+    }
+  },
+  {
+    "case_id": "eval-003",
+    "description": "Build a network intrusion detection system that monitors traffic for suspicious patterns and generates alerts. Should support signature-based and anomaly-based detection.",
+    "expected_categories": [
+      "CAT-03"
+    ],
+    "latency": {
+      "analysis_seconds": 0.0,
+      "clarification_seconds": 0.0,
+      "srs_seconds": 0.0,
+      "total_seconds": 0.0
+    },
+    "retry_counts": {
+      "analysis": 0,
+      "clarification": 0,
+      "srs": 0
+    },
+    "success": {
+      "analysis": false,
+      "clarification": false,
+      "srs": false
+    },
+    "analysis": {
+      "json_valid": false,
+      "schema_valid": false,
+      "inferred_categories": [],
+      "category_accuracy": 0.0,
+      "missing_info_count": 0
+    },
+    "clarification": {
+      "json_valid": false,
+      "schema_valid": false,
+      "question_count": 0,
+      "questions_have_target_gap": 0,
+      "questions_have_reason": 0
+    },
+    "srs": {
+      "json_valid": false,
+      "schema_valid": false,
+      "requirement_count": 0,
+      "duplicate_requirement_ids": [],
+      "missing_statements": 0,
+      "missing_acceptance_criteria": 0,
+      "invalid_priorities": 0,
+      "requirements_by_category": {
+        "functional": 0,
+        "non_functional": 0,
+        "security": 0,
+        "data": 0,
+        "network": 0
+      },
+      "threat_count": 0,
+      "has_architecture": false,
+      "has_testing_strategy": false,
+      "has_risks": false
+    },
+    "errors": {
+      "analysis": "'str' object has no attribute 'value'",
+      "clarification": null,
+      "srs": null
+    }
+  }
+]

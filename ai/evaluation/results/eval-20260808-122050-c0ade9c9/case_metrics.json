@@ -1,0 +1,652 @@
+[
+  {
+    "case_id": "eval-001",
+    "description": "I want to build a firewall and network monitoring system for a college campus with separate student, faculty, laboratory and administrative networks.",
+    "expected_categories": [
+      "CAT-02",
+      "CAT-03"
+    ],
+    "latency": {
+      "analysis_seconds": 0.015659332275390625,
+      "clarification_seconds": 0.00828099250793457,
+      "srs_seconds": 0.0048749446868896484,
+      "total_seconds": 0.028815269470214844
+    },
+    "retry_counts": {
+      "analysis": 0,
+      "clarification": 0,
+      "srs": 0
+    },
+    "success": {
+      "analysis": true,
+      "clarification": true,
+      "srs": true
+    },
+    "analysis": {
+      "json_valid": true,
+      "schema_valid": true,
+      "inferred_categories": [
+        "CAT-01"
+      ],
+      "category_accuracy": 0.0,
+      "missing_info_count": 2
+    },
+    "clarification": {
+      "json_valid": true,
+      "schema_valid": true,
+      "question_count": 2,
+      "questions_have_target_gap": 2,
+      "questions_have_reason": 2
+    },
+    "srs": {
+      "json_valid": true,
+      "schema_valid": true,
+      "requirement_count": 9,
+      "duplicate_requirement_ids": [],
+      "missing_statements": 0,
+      "missing_acceptance_criteria": 0,
+      "invalid_priorities": 0,
+      "requirements_by_category": {
+        "functional": 3,
+        "non_functional": 2,
+        "security": 2,
+        "data": 1,
+        "network": 1
+      },
+      "threat_count": 2,
+      "has_architecture": true,
+      "has_testing_strategy": true,
+      "has_risks": true
+    },
+    "errors": {
+      "analysis": null,
+      "clarification": null,
+      "srs": null
+    }
+  },
+  {
+    "case_id": "eval-002",
+    "description": "Design an enterprise-grade next-generation firewall for a 5,000 employee organization with multiple branch offices. Must support application-layer inspection, SSL decryption, and centralized management.",
+    "expected_categories": [
+      "CAT-02",
+      "CAT-03",
+      "CAT-08"
+    ],
+    "latency": {
+      "analysis_seconds": 0.0,
+      "clarification_seconds": 0.015670061111450195,
+      "srs_seconds": 0.010379791259765625,
+      "total_seconds": 0.02604985237121582
+    },
+    "retry_counts": {
+      "analysis": 0,
+      "clarification": 0,
+      "srs": 0
+    },
+    "success": {
+      "analysis": true,
+      "clarification": true,
+      "srs": true
+    },
+    "analysis": {
+      "json_valid": true,
+      "schema_valid": true,
+      "inferred_categories": [
+        "CAT-01"
+      ],
+      "category_accuracy": 0.0,
+      "missing_info_count": 2
+    },
+    "clarification": {
+      "json_valid": true,
+      "schema_valid": true,
+      "question_count": 2,
+      "questions_have_target_gap": 2,
+      "questions_have_reason": 2
+    },
+    "srs": {
+      "json_valid": true,
+      "schema_valid": true,
+      "requirement_count": 9,
+      "duplicate_requirement_ids": [],
+      "missing_statements": 0,
+      "missing_acceptance_criteria": 0,
+      "invalid_priorities": 0,
+      "requirements_by_category": {
+        "functional": 3,
+        "non_functional": 2,
+        "security": 2,
+        "data": 1,
+        "network": 1
+      },
+      "threat_count": 2,
+      "has_architecture": true,
+      "has_testing_strategy": true,
+      "has_risks": true
+    },
+    "errors": {
+      "analysis": null,
+      "clarification": null,
+      "srs": null
+    }
+  },
+  {
+    "case_id": "eval-003",
+    "description": "Build a network intrusion detection system that monitors traffic for suspicious patterns and generates alerts. Should support signature-based and anomaly-based detection.",
+    "expected_categories": [
+      "CAT-03"
+    ],
+    "latency": {
+      "analysis_seconds": 0.00772857666015625,
+      "clarification_seconds": 0.0,
+      "srs_seconds": 0.0,
+      "total_seconds": 0.00772857666015625
+    },
+    "retry_counts": {
+      "analysis": 0,
+      "clarification": 0,
+      "srs": 0
+    },
+    "success": {
+      "analysis": true,
+      "clarification": true,
+      "srs": true
+    },
+    "analysis": {
+      "json_valid": true,
+      "schema_valid": true,
+      "inferred_categories": [
+        "CAT-04",
+        "CAT-07"
+      ],
+      "category_accuracy": 0.0,
+      "missing_info_count": 2
+    },
+    "clarification": {
+      "json_valid": true,
+      "schema_valid": true,
+      "question_count": 2,
+      "questions_have_target_gap": 2,
+      "questions_have_reason": 2
+    },
+    "srs": {
+      "json_valid": true,
+      "schema_valid": true,
+      "requirement_count": 9,
+      "duplicate_requirement_ids": [],
+      "missing_statements": 0,
+      "missing_acceptance_criteria": 0,
+      "invalid_priorities": 0,
+      "requirements_by_category": {
+        "functional": 3,
+        "non_functional": 2,
+        "security": 2,
+        "data": 1,
+        "network": 1
+      },
+      "threat_count": 2,
+      "has_architecture": true,
+      "has_testing_strategy": true,
+      "has_risks": true
+    },
+    "errors": {
+      "analysis": null,
+      "clarification": null,
+      "srs": null
+    }
+  },
+  {
+    "case_id": "eval-004",
+    "description": "Create a network traffic monitoring platform for a mid-size company. Need flow collection, bandwidth analysis, and anomalous traffic detection.",
+    "expected_categories": [
+      "CAT-03",
+      "CAT-07"
+    ],
+    "latency": {
+      "analysis_seconds": 0.0,
+      "clarification_seconds": 0.015939950942993164,
+      "srs_seconds": 0.0,
+      "total_seconds": 0.015939950942993164
+    },
+    "retry_counts": {
+      "analysis": 0,
+      "clarification": 0,
+      "srs": 0
+    },
+    "success": {
+      "analysis": true,
+      "clarification": true,
+      "srs": true
+    },
+    "analysis": {
+      "json_valid": true,
+      "schema_valid": true,
+      "inferred_categories": [
+        "CAT-01"
+      ],
+      "category_accuracy": 0.0,
+      "missing_info_count": 2
+    },
+    "clarification": {
+      "json_valid": true,
+      "schema_valid": true,
+      "question_count": 2,
+      "questions_have_target_gap": 2,
+      "questions_have_reason": 2
+    },
+    "srs": {
+      "json_valid": true,
+      "schema_valid": true,
+      "requirement_count": 9,
+      "duplicate_requirement_ids": [],
+      "missing_statements": 0,
+      "missing_acceptance_criteria": 0,
+      "invalid_priorities": 0,
+      "requirements_by_category": {
+        "functional": 3,
+        "non_functional": 2,
+        "security": 2,
+        "data": 1,
+        "network": 1
+      },
+      "threat_count": 2,
+      "has_architecture": true,
+      "has_testing_strategy": true,
+      "has_risks": true
+    },
+    "errors": {
+      "analysis": null,
+      "clarification": null,
+      "srs": null
+    }
+  },
+  {
+    "case_id": "eval-005",
+    "description": "Design a secure API gateway for a fintech startup. Must handle authentication (OAuth 2.0, API keys), rate limiting, input validation, and protect against OWASP API Top 10 risks.",
+    "expected_categories": [
+      "CAT-05"
+    ],
+    "latency": {
+      "analysis_seconds": 0.0,
+      "clarification_seconds": 0.01570272445678711,
+      "srs_seconds": 0.01219487190246582,
+      "total_seconds": 0.02789759635925293
+    },
+    "retry_counts": {
+      "analysis": 0,
+      "clarification": 0,
+      "srs": 0
+    },
+    "success": {
+      "analysis": true,
+      "clarification": true,
+      "srs": true
+    },
+    "analysis": {
+      "json_valid": true,
+      "schema_valid": true,
+      "inferred_categories": [
+        "CAT-04",
+        "CAT-07"
+      ],
+      "category_accuracy": 0.0,
+      "missing_info_count": 2
+    },
+    "clarification": {
+      "json_valid": true,
+      "schema_valid": true,
+      "question_count": 2,
+      "questions_have_target_gap": 2,
+      "questions_have_reason": 2
+    },
+    "srs": {
+      "json_valid": true,
+      "schema_valid": true,
+      "requirement_count": 9,
+      "duplicate_requirement_ids": [],
+      "missing_statements": 0,
+      "missing_acceptance_criteria": 0,
+      "invalid_priorities": 0,
+      "requirements_by_category": {
+        "functional": 3,
+        "non_functional": 2,
+        "security": 2,
+        "data": 1,
+        "network": 1
+      },
+      "threat_count": 2,
+      "has_architecture": true,
+      "has_testing_strategy": true,
+      "has_risks": true
+    },
+    "errors": {
+      "analysis": null,
+      "clarification": null,
+      "srs": null
+    }
+  },
+  {
+    "case_id": "eval-006",
+    "description": "Build a zero-trust VPN replacement for remote access. Should support device posture checking, identity-aware access, and micro-segmentation for 2000 remote employees.",
+    "expected_categories": [
+      "CAT-06",
+      "CAT-08"
+    ],
+    "latency": {
+      "analysis_seconds": 0.015662193298339844,
+      "clarification_seconds": 0.0,
+      "srs_seconds": 0.0,
+      "total_seconds": 0.015662193298339844
+    },
+    "retry_counts": {
+      "analysis": 0,
+      "clarification": 0,
+      "srs": 0
+    },
+    "success": {
+      "analysis": true,
+      "clarification": true,
+      "srs": true
+    },
+    "analysis": {
+      "json_valid": true,
+      "schema_valid": true,
+      "inferred_categories": [
+        "CAT-01"
+      ],
+      "category_accuracy": 0.0,
+      "missing_info_count": 2
+    },
+    "clarification": {
+      "json_valid": true,
+      "schema_valid": true,
+      "question_count": 2,
+      "questions_have_target_gap": 2,
+      "questions_have_reason": 2
+    },
+    "srs": {
+      "json_valid": true,
+      "schema_valid": true,
+      "requirement_count": 9,
+      "duplicate_requirement_ids": [],
+      "missing_statements": 0,
+      "missing_acceptance_criteria": 0,
+      "invalid_priorities": 0,
+      "requirements_by_category": {
+        "functional": 3,
+        "non_functional": 2,
+        "security": 2,
+        "data": 1,
+        "network": 1
+      },
+      "threat_count": 2,
+      "has_architecture": true,
+      "has_testing_strategy": true,
+      "has_risks": true
+    },
+    "errors": {
+      "analysis": null,
+      "clarification": null,
+      "srs": null
+    }
+  },
+  {
+    "case_id": "eval-007",
+    "description": "Design an identity and access management system for a healthcare provider with 5000 staff. Must support SSO, MFA, RBAC, user provisioning, and audit logging for HIPAA compliance.",
+    "expected_categories": [
+      "CAT-04"
+    ],
+    "latency": {
+      "analysis_seconds": 0.003912925720214844,
+      "clarification_seconds": 0.011907815933227539,
+      "srs_seconds": 0.013410568237304688,
+      "total_seconds": 0.02923130989074707
+    },
+    "retry_counts": {
+      "analysis": 0,
+      "clarification": 0,
+      "srs": 0
+    },
+    "success": {
+      "analysis": true,
+      "clarification": true,
+      "srs": true
+    },
+    "analysis": {
+      "json_valid": true,
+      "schema_valid": true,
+      "inferred_categories": [
+        "CAT-01"
+      ],
+      "category_accuracy": 0.0,
+      "missing_info_count": 2
+    },
+    "clarification": {
+      "json_valid": true,
+      "schema_valid": true,
+      "question_count": 2,
+      "questions_have_target_gap": 2,
+      "questions_have_reason": 2
+    },
+    "srs": {
+      "json_valid": true,
+      "schema_valid": true,
+      "requirement_count": 9,
+      "duplicate_requirement_ids": [],
+      "missing_statements": 0,
+      "missing_acceptance_criteria": 0,
+      "invalid_priorities": 0,
+      "requirements_by_category": {
+        "functional": 3,
+        "non_functional": 2,
+        "security": 2,
+        "data": 1,
+        "network": 1
+      },
+      "threat_count": 2,
+      "has_architecture": true,
+      "has_testing_strategy": true,
+      "has_risks": true
+    },
+    "errors": {
+      "analysis": null,
+      "clarification": null,
+      "srs": null
+    }
+  },
+  {
+    "case_id": "eval-008",
+    "description": "Create a role-based access control portal for internal applications. Support dynamic role assignment, approval workflows, and periodic access reviews.",
+    "expected_categories": [
+      "CAT-04"
+    ],
+    "latency": {
+      "analysis_seconds": 0.013651609420776367,
+      "clarification_seconds": 0.0,
+      "srs_seconds": 0.004607439041137695,
+      "total_seconds": 0.018259048461914062
+    },
+    "retry_counts": {
+      "analysis": 0,
+      "clarification": 0,
+      "srs": 0
+    },
+    "success": {
+      "analysis": true,
+      "clarification": true,
+      "srs": true
+    },
+    "analysis": {
+      "json_valid": true,
+      "schema_valid": true,
+      "inferred_categories": [
+        "CAT-01"
+      ],
+      "category_accuracy": 0.0,
+      "missing_info_count": 2
+    },
+    "clarification": {
+      "json_valid": true,
+      "schema_valid": true,
+      "question_count": 2,
+      "questions_have_target_gap": 2,
+      "questions_have_reason": 2
+    },
+    "srs": {
+      "json_valid": true,
+      "schema_valid": true,
+      "requirement_count": 9,
+      "duplicate_requirement_ids": [],
+      "missing_statements": 0,
+      "missing_acceptance_criteria": 0,
+      "invalid_priorities": 0,
+      "requirements_by_category": {
+        "functional": 3,
+        "non_functional": 2,
+        "security": 2,
+        "data": 1,
+        "network": 1
+      },
+      "threat_count": 2,
+      "has_architecture": true,
+      "has_testing_strategy": true,
+      "has_risks": true
+    },
+    "errors": {
+      "analysis": null,
+      "clarification": null,
+      "srs": null
+    }
+  },
+  {
+    "case_id": "eval-009",
+    "description": "Implement a centralized security logging and SIEM-like platform. Collect logs from firewalls, servers, applications. Support correlation rules, dashboards, and alerting.",
+    "expected_categories": [
+      "CAT-03",
+      "CAT-07"
+    ],
+    "latency": {
+      "analysis_seconds": 0.0,
+      "clarification_seconds": 0.014011859893798828,
+      "srs_seconds": 0.014864921569824219,
+      "total_seconds": 0.028876781463623047
+    },
+    "retry_counts": {
+      "analysis": 0,
+      "clarification": 0,
+      "srs": 0
+    },
+    "success": {
+      "analysis": true,
+      "clarification": true,
+      "srs": true
+    },
+    "analysis": {
+      "json_valid": true,
+      "schema_valid": true,
+      "inferred_categories": [
+        "CAT-01"
+      ],
+      "category_accuracy": 0.0,
+      "missing_info_count": 2
+    },
+    "clarification": {
+      "json_valid": true,
+      "schema_valid": true,
+      "question_count": 2,
+      "questions_have_target_gap": 2,
+      "questions_have_reason": 2
+    },
+    "srs": {
+      "json_valid": true,
+      "schema_valid": true,
+      "requirement_count": 9,
+      "duplicate_requirement_ids": [],
+      "missing_statements": 0,
+      "missing_acceptance_criteria": 0,
+      "invalid_priorities": 0,
+      "requirements_by_category": {
+        "functional": 3,
+        "non_functional": 2,
+        "security": 2,
+        "data": 1,
+        "network": 1
+      },
+      "threat_count": 2,
+      "has_architecture": true,
+      "has_testing_strategy": true,
+      "has_risks": true
+    },
+    "errors": {
+      "analysis": null,
+      "clarification": null,
+      "srs": null
+    }
+  },
+  {
+    "case_id": "eval-010",
+    "description": "Build a security information and event management system for a financial services firm. Ingest 100GB/day, real-time correlation, compliance reporting for SOX/PCI-DSS.",
+    "expected_categories": [
+      "CAT-03",
+      "CAT-07"
+    ],
+    "latency": {
+      "analysis_seconds": 0.010977745056152344,
+      "clarification_seconds": 0.006743192672729492,
+      "srs_seconds": 0.0,
+      "total_seconds": 0.017720937728881836
+    },
+    "retry_counts": {
+      "analysis": 0,
+      "clarification": 0,
+      "srs": 0
+    },
+    "success": {
+      "analysis": true,
+      "clarification": true,
+      "srs": true
+    },
+    "analysis": {
+      "json_valid": true,
+      "schema_valid": true,
+      "inferred_categories": [
+        "CAT-04",
+        "CAT-07"
+      ],
+      "category_accuracy": 0.3333333333333333,
+      "missing_info_count": 2
+    },
+    "clarification": {
+      "json_valid": true,
+      "schema_valid": true,
+      "question_count": 2,
+      "questions_have_target_gap": 2,
+      "questions_have_reason": 2
+    },
+    "srs": {
+      "json_valid": true,
+      "schema_valid": true,
+      "requirement_count": 9,
+      "duplicate_requirement_ids": [],
+      "missing_statements": 0,
+      "missing_acceptance_criteria": 0,
+      "invalid_priorities": 0,
+      "requirements_by_category": {
+        "functional": 3,
+        "non_functional": 2,
+        "security": 2,
+        "data": 1,
+        "network": 1
+      },
+      "threat_count": 2,
+      "has_architecture": true,
+      "has_testing_strategy": true,
+      "has_risks": true
+    },
+    "errors": {
+      "analysis": null,
+      "clarification": null,
+      "srs": null
+    }
+  }
+]

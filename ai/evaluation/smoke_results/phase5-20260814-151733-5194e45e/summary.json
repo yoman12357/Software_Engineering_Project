@@ -1,0 +1,25 @@
+{
+  "evaluation_run_id": "phase5-20260814-151733-5194e45e",
+  "status": "FAILED",
+  "started_at": "2026-08-14T15:17:33.268498+00:00",
+  "completed_at": "2026-08-14T15:17:43.818647+00:00",
+  "dataset": "C:/Users/Aryan Bokolia/Desktop/SoftwareEngineering/ai/evaluation/dataset.json",
+  "held_out_case_count": 1,
+  "configurations": [
+    {
+      "configuration": "FINETUNED_RAG",
+      "model_variant": "finetuned",
+      "rag_enabled": true,
+      "status": "FAILED",
+      "total_cases": 0,
+      "successful_cases": 0,
+      "generation_success_rate": null,
+      "raw_metrics": null,
+      "final_metrics": null,
+      "latency": null,
+      "evaluation_run_id": "phase5-20260814-151733-5194e45e-finetuned_rag",
+      "model_name": "cybersrs-qwen3-4b-ft",
+      "error": "Configuration failed (LLMOutputError)"
+    }
+  ]
+}

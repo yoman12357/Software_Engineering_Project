@@ -1,0 +1,25 @@
+{
+  "evaluation_run_id": "phase5-20260814-160822-be218a0a",
+  "status": "FAILED",
+  "started_at": "2026-08-14T16:08:22.784719+00:00",
+  "completed_at": "2026-08-14T16:09:41.697923+00:00",
+  "dataset": "C:/Users/Aryan Bokolia/Desktop/SoftwareEngineering/ai/evaluation/dataset.json",
+  "held_out_case_count": 1,
+  "configurations": [
+    {
+      "configuration": "FINETUNED_RAG",
+      "model_variant": "finetuned",
+      "rag_enabled": true,
+      "status": "FAILED",
+      "total_cases": 1,
+      "successful_cases": 0,
+      "generation_success_rate": 0.0,
+      "raw_metrics": null,
+      "final_metrics": null,
+      "latency": null,
+      "evaluation_run_id": "phase5-20260814-160822-be218a0a-finetuned_rag",
+      "model_name": "cybersrs-qwen3-4b-ft",
+      "error": null
+    }
+  ]
+}

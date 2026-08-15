@@ -1,0 +1,159 @@
+{
+  "old_chroma_backup": "data/chroma_backup_before_rebuild_20260810-012750",
+  "raw_corpus_untouched": true,
+  "ingestion": {
+    "manifest": "corpus_extract/CyberSRS_RAG_Corpus/knowledge/manifest.json",
+    "documents_processed": 10,
+    "documents_failed": 0,
+    "total_chunks": 4470,
+    "total_embeddings": 4470,
+    "kb_version": "7591b1d38fd349a9"
+  },
+  "collection": {
+    "collection_name": "cybersrs_knowledge",
+    "total_chunks": 4470,
+    "persist_path": "C:\\Users\\Aryan Bokolia\\Desktop\\SoftwareEngineering\\data\\chroma"
+  },
+  "embedding_provider": "ollama",
+  "embedding_model": "nomic-embed-text",
+  "embedding_dimension": 768,
+  "stored_embedding_dimension_sample": 768,
+  "source_document_count": 10,
+  "source_counts": {
+    "nist_csf_2_0": 89,
+    "nist_sp_800_53_r5": 2801,
+    "nist_sp_800_61_r3": 148,
+    "nist_sp_800_63_4": 222,
+    "nist_sp_800_207": 164,
+    "nist_sp_800_41_r1": 185,
+    "nist_sp_800_92": 195,
+    "owasp_asvs_5_pdf": 302,
+    "owasp_asvs_5_csv": 346,
+    "owasp_top10_2025_intro": 18
+  },
+  "retrieval_sanity": [
+    {
+      "query": "firewall network segmentation",
+      "latency_seconds": 0.123,
+      "chunks": [
+        {
+          "chunk_id": "nist_sp_800_41_r1_chunk_50",
+          "score": 0.7046,
+          "source_id": "nist_sp_800_41_r1",
+          "document_title": "NIST SP 800-41 Rev. 1: Guidelines on Firewalls and Firewall Policy",
+          "section_heading": "GUIDELINES ON FIREWALLS AND FIREWALL POLICY"
+        },
+        {
+          "chunk_id": "nist_sp_800_41_r1_chunk_105",
+          "score": 0.6809,
+          "source_id": "nist_sp_800_41_r1",
+          "document_title": "NIST SP 800-41 Rev. 1: Guidelines on Firewalls and Firewall Policy",
+          "section_heading": "GUIDELINES ON FIREWALLS AND FIREWALL POLICY"
+        },
+        {
+          "chunk_id": "nist_sp_800_41_r1_chunk_57",
+          "score": 0.6783,
+          "source_id": "nist_sp_800_41_r1",
+          "document_title": "NIST SP 800-41 Rev. 1: Guidelines on Firewalls and Firewall Policy",
+          "section_heading": "GUIDELINES ON FIREWALLS AND FIREWALL POLICY"
+        },
+        {
+          "chunk_id": "nist_sp_800_41_r1_chunk_20",
+          "score": 0.6773,
+          "source_id": "nist_sp_800_41_r1",
+          "document_title": "NIST SP 800-41 Rev. 1: Guidelines on Firewalls and Firewall Policy",
+          "section_heading": "GUIDELINES ON FIREWALLS AND FIREWALL POLICY"
+        },
+        {
+          "chunk_id": "nist_sp_800_41_r1_chunk_12",
+          "score": 0.6755,
+          "source_id": "nist_sp_800_41_r1",
+          "document_title": "NIST SP 800-41 Rev. 1: Guidelines on Firewalls and Firewall Policy",
+          "section_heading": "GUIDELINES ON FIREWALLS AND FIREWALL POLICY"
+        }
+      ]
+    },
+    {
+      "query": "OAuth API security",
+      "latency_seconds": 32.108,
+      "chunks": [
+        {
+          "chunk_id": "owasp_asvs_5_pdf_chunk_114",
+          "score": 0.7383,
+          "source_id": "owasp_asvs_5_pdf",
+          "document_title": "OWASP Application Security Verification Standard 5.0.0",
+          "section_heading": ""
+        },
+        {
+          "chunk_id": "owasp_asvs_5_pdf_chunk_116",
+          "score": 0.7232,
+          "source_id": "owasp_asvs_5_pdf",
+          "document_title": "OWASP Application Security Verification Standard 5.0.0",
+          "section_heading": ""
+        },
+        {
+          "chunk_id": "owasp_asvs_5_csv_chunk_206",
+          "score": 0.7063,
+          "source_id": "owasp_asvs_5_csv",
+          "document_title": "OWASP Application Security Verification Standard 5.0.0 (CSV)",
+          "section_heading": "Row 206"
+        },
+        {
+          "chunk_id": "owasp_asvs_5_pdf_chunk_118",
+          "score": 0.7042,
+          "source_id": "owasp_asvs_5_pdf",
+          "document_title": "OWASP Application Security Verification Standard 5.0.0",
+          "section_heading": ""
+        },
+        {
+          "chunk_id": "owasp_asvs_5_pdf_chunk_112",
+          "score": 0.702,
+          "source_id": "owasp_asvs_5_pdf",
+          "document_title": "OWASP Application Security Verification Standard 5.0.0",
+          "section_heading": ""
+        }
+      ]
+    },
+    {
+      "query": "identity MFA RBAC",
+      "latency_seconds": 32.133,
+      "chunks": [
+        {
+          "chunk_id": "nist_sp_800_53_r5_chunk_169",
+          "score": 0.6001,
+          "source_id": "nist_sp_800_53_r5",
+          "document_title": "NIST SP 800-53 Rev. 5: Security and Privacy Controls",
+          "section_heading": "PAGE 25"
+        },
+        {
+          "chunk_id": "nist_sp_800_53_r5_chunk_278",
+          "score": 0.5661,
+          "source_id": "nist_sp_800_53_r5",
+          "document_title": "NIST SP 800-53 Rev. 5: Security and Privacy Controls",
+          "section_heading": "PAGE 58"
+        },
+        {
+          "chunk_id": "nist_csf_2_0_chunk_61",
+          "score": 0.5562,
+          "source_id": "nist_csf_2_0",
+          "document_title": "NIST Cybersecurity Framework (CSF) 2.0",
+          "section_heading": "PROTECT (PR): Safeguards to manage the organization\u2019s cybersecurity risks are used"
+        },
+        {
+          "chunk_id": "nist_sp_800_63_4_chunk_201",
+          "score": 0.5336,
+          "source_id": "nist_sp_800_63_4",
+          "document_title": "NIST SP 800-63-4: Digital Identity Guidelines",
+          "section_heading": "NIST SP 800-63-4"
+        },
+        {
+          "chunk_id": "nist_sp_800_53_r5_chunk_1751",
+          "score": 0.5325,
+          "source_id": "nist_sp_800_53_r5",
+          "document_title": "NIST SP 800-53 Rev. 5: Security and Privacy Controls",
+          "section_heading": "PIV"
+        }
+      ]
+    }
+  ]
+}

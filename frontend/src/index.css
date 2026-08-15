@@ -1,0 +1,179 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light theme: #ffffff base with the supplied pastel palette as surfaces. */
+    --background: 255 255 255;
+    --foreground: 20 20 20;
+    --card: 255 255 255;
+    --card-foreground: 20 20 20;
+    --popover: 255 255 255;
+    --popover-foreground: 20 20 20;
+    --primary: 20 20 20;
+    --primary-hover: 55 55 55;
+    --primary-foreground: 255 255 255;
+    --secondary: 240 240 255;
+    --secondary-foreground: 20 20 20;
+    --muted: 220 240 240;
+    --muted-foreground: 82 92 102;
+    --accent: 220 240 255;
+    --accent-foreground: 20 20 20;
+    --destructive: 20 20 20;
+    --destructive-foreground: 255 255 255;
+    --success: 220 240 240;
+    --success-foreground: 20 20 20;
+    --warning: 200 220 240;
+    --warning-foreground: 20 20 20;
+    --border: 200 220 240;
+    --input: 200 220 240;
+    --ring: 20 20 20;
+    --radius: 12px;
+    --soft-blue: 220 240 255;
+    --soft-lavender: 240 240 255;
+    --secondary-blue: 200 220 240;
+    --soft-cyan: 220 240 240;
+    --secondary-surface: 240 240 255;
+  }
+
+  .dark {
+    /* Dark theme: #141414 base with the supplied pastels as readable accents. */
+    --background: 20 20 20;
+    --foreground: 255 255 255;
+    --card: 28 28 28;
+    --card-foreground: 255 255 255;
+    --popover: 28 28 28;
+    --popover-foreground: 255 255 255;
+    --primary: 220 240 255;
+    --primary-hover: 200 220 240;
+    --primary-foreground: 20 20 20;
+    --secondary: 36 36 36;
+    --secondary-foreground: 240 240 255;
+    --muted: 36 36 36;
+    --muted-foreground: 200 220 240;
+    --accent: 220 240 240;
+    --accent-foreground: 20 20 20;
+    --destructive: 240 240 255;
+    --destructive-foreground: 20 20 20;
+    --success: 220 240 240;
+    --success-foreground: 20 20 20;
+    --warning: 200 220 240;
+    --warning-foreground: 20 20 20;
+    --border: 200 220 240;
+    --input: 200 220 240;
+    --ring: 220 240 255;
+    --radius: 12px;
+    --soft-blue: 220 240 255;
+    --soft-lavender: 240 240 255;
+    --secondary-blue: 200 220 240;
+    --soft-cyan: 220 240 240;
+    --secondary-surface: 28 28 28;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Prevent theme flash on load */
+  [data-theme="light"] {
+    color-scheme: light;
+  }
+  [data-theme="dark"] {
+    color-scheme: dark;
+  }
+
+  /* Smooth theme transitions */
+  *,
+  *::before,
+  *::after {
+    transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
+  }
+
+  /* Disable transitions during theme switch to prevent flash */
+  .theme-transitioning *,
+  .theme-transitioning *::before,
+  .theme-transitioning *::after {
+    transition-duration: 0ms !important;
+  }
+
+  /* Scrollbar styling using CSS variables */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--muted-foreground) / 0.3) transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: rgb(var(--muted-foreground) / 0.3);
+    border-radius: 3px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(var(--muted-foreground) / 0.5);
+  }
+
+  /* Focus visible styles */
+  .focus-ring {
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  }
+}
+
+@layer components {
+  /* Glass morphism */
+  .glass {
+    @apply bg-white/80 dark:bg-card/80 backdrop-blur-xl;
+  }
+
+  .glass-strong {
+    @apply bg-white/90 dark:bg-card/90 backdrop-blur-2xl;
+  }
+
+  /* Animation utilities */
+  .animate-in {
+    animation: fadeIn 200ms ease-out, slideUp 300ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  .animate-out {
+    animation: fadeOut 150ms ease-in, slideDown 200ms ease-in;
+  }
+
+  /* Text selection */
+  ::selection {
+    @apply bg-primary/20 text-primary-foreground;
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer utilities {
+  /* Text gradient utilities */
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-primary/80 to-primary/60;
+  }
+}

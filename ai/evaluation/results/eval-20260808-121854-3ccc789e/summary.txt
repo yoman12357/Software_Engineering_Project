@@ -1,0 +1,54 @@
+============================================================
+CYBERSRS BASE MODEL EVALUATION SUMMARY
+============================================================
+Run ID: eval-20260808-121854-3ccc789e
+Timestamp: 2026-08-08T12:18:54.723884+00:00
+Provider: ollama
+Model: qwen3:4b-instruct-2507-q4_K_M
+Total Cases: 3
+Fully Successful: 3
+
+SUCCESS RATES:
+  Analysis:      100.0%
+  Clarification: 100.0%
+  SRS:           100.0%
+
+JSON VALIDITY:
+  Analysis:      100.0%
+  Clarification: 100.0%
+  SRS:           100.0%
+
+SCHEMA VALIDITY:
+  Analysis:      100.0%
+  Clarification: 0.0%
+  SRS:           100.0%
+
+CATEGORY ACCURACY:
+  Mean:  0.000
+  Std:   0.000
+
+REQUIREMENT QUALITY:
+  Total Requirements:     27
+  Avg per SRS:            9.0
+  Duplicate ID Rate:      0.000
+  Missing Statement Rate: 0.000
+  Missing Acceptance:     0.000
+  Invalid Priority Rate:  0.000
+
+CLARIFICATION QUALITY:
+  Avg Questions/Case:     2.0
+  Target Gap Coverage:    100.0%
+
+PERFORMANCE:
+  Avg Analysis Latency:   0.0s
+  Avg Clarification:      0.0s
+  Avg SRS Latency:        0.0s
+  Avg Total Latency:      0.0s
+  Avg Retry Count:        0.00
+
+GENERATION FAILURES:
+  Analysis:      0
+  Clarification: 0
+  SRS:           0
+
+============================================================

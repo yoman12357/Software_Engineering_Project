@@ -1,0 +1,528 @@
+[
+  {
+    "evaluation_run_id": "phase5-20260814-151726-236e67d3-base",
+    "configuration": "BASE",
+    "model_variant": "base",
+    "model_name": "cybersrs-mock-1b",
+    "rag_enabled": false,
+    "rag_enabled_used": false,
+    "case_id": "heldout-test-001",
+    "expected_categories": [
+      "CAT-02",
+      "CAT-03"
+    ],
+    "project_id": "83d4cb42-0b9b-41ab-a97f-1aacb63f5a8b",
+    "srs_version_id": "21a9e8ca-f8e0-46dc-9297-3e86a9cf273c",
+    "status": "COMPLETED",
+    "timestamp": "2026-08-14T15:17:26.840064+00:00",
+    "raw_output": "{\"architecture_summary\": {\"components\": [{\"description\": \"Enforces allow/deny filtering rules at the network edge.\", \"name\": \"Perimeter Firewall\", \"responsibilities\": [\"Filter traffic\", \"Block malicious connections\"]}, {\"description\": \"Collects and analyses network flow data.\", \"name\": \"Monitoring Server\", \"responsibilities\": [\"Detect anomalies\", \"Generate alerts\"]}], \"data_flows\": [\"Network packets -> Firewall -> Internal segments\"], \"deployment_notes\": \"Deployed on dedicated campus infrastructure.\", \"overview\": \"A layered security architecture with a perimeter firewall, monitoring sensors, and a central management plane.\"}, \"assumptions\": [\"The system operates within the existing campus network infrastructure.\", \"Administrative users are trusted and subject to organisational policy.\"], \"data_requirements\": [{\"acceptance_criteria\": \"Verify that The system shall retain security logs for at least 90 days is demonstrated under test.\", \"category\": \"data\", \"confidence\": \"high\", \"dependencies\": [], \"id\": \"DATA-001\", \"priority\": \"should\", \"rationale\": \"Retention supports post-incident analysis and compliance.\", \"source_references\": [], \"statement\": \"The system shall retain security logs for at least 90 days.\", \"title\": \"Log Retention\", \"user_confirmed\": false}], \"functional_requirements\": [{\"acceptance_criteria\": \"Verify that The system shall filter inbound and outbound network traffic according to configurable allow and deny rules is demonstrated under test.\", \"category\": \"functional\", \"confidence\": \"high\", \"dependencies\": [], \"id\": \"FR-001\", \"priority\": \"must\", \"rationale\": \"Filtering is the core control that prevents unauthorised access through the perimeter.\", \"source_references\": [], \"statement\": \"The system shall filter inbound and outbound network traffic according to configurable allow and deny rules.\", \"title\": \"Traffic Filtering\", \"user_confirmed\": false}, {\"acceptance_criteria\": \"Verify that The system shall monitor network traffic for suspicious activity and generate alerts for the security team is demonstrated under test.\", \"category\": \"functional\", \"confidence\": \"high\", \"dependencies\": [], \"id\": \"FR-002\", \"priority\": \"must\", \"rationale\": \"Monitoring provides the detection capability required to respond to incidents.\", \"source_references\": [], \"statement\": \"The system shall monitor network traffic for suspicious activity and generate alerts for the security team.\", \"title\": \"Monitoring and Alerting\", \"user_confirmed\": false}, {\"acceptance_criteria\": \"Verify that The system shall allow administrators to manage firewall rules through a secure interface is demonstrated under test.\", \"category\": \"functional\", \"confidence\": \"high\", \"dependencies\": [], \"id\": \"FR-003\", \"priority\": \"should\", \"rationale\": \"Administrators need a controlled way to update filtering behaviour.\", \"source_references\": [], \"statement\": \"The system shall allow administrators to manage firewall rules through a secure interface.\", \"title\": \"Rule Management\", \"user_confirmed\": false}], \"metadata\": {\"adapter_name\": null, \"generated_at\": \"2026-08-14T15:17:26.812855+00:00\", \"inferred_categories\": [\"CAT-01\"], \"model_name\": \"cybersrs-mock-1b\", \"project_name\": \"Phase 5 heldout-test-001 BASE\", \"version\": 1}, \"mitigations\": [{\"description\": \"Enforce deny-by-default firewall rules and rate-limit failed connection attempts.\", \"mitigation_id\": \"MIT-001\", \"related_requirement_ids\": [\"FR-001\", \"SEC-001\"]}, {\"description\": \"Use append-only, cryptographically signed log storage.\", \"mitigation_id\": \"MIT-002\", \"related_requirement_ids\": [\"SEC-002\"]}], \"network_requirements\": [{\"acceptance_criteria\": \"Verify that The system shall support segmented network zones with distinct filtering policies is demonstrated under test.\", \"category\": \"network\", \"confidence\": \"high\", \"dependencies\": [], \"id\": \"NET-001\", \"priority\": \"should\", \"rationale\": \"Segmentation limits lateral movement in the campus network.\", \"source_references\": [], \"statement\": \"The system shall support segmented network zones with distinct filtering policies.\", \"title\": \"Network Segmentation\", \"user_confirmed\": false}], \"non_functional_requirements\": [{\"acceptance_criteria\": \"Verify that The system shall maintain availability of the monitored network with no more than 5 minutes of downtime per month is demonstrated under test.\", \"category\": \"non_functional\", \"confidence\": \"high\", \"dependencies\": [], \"id\": \"NFR-001\", \"priority\": \"must\", \"rationale\": \"Campus operations depend on continuous network availability.\", \"source_references\": [], \"statement\": \"The system shall maintain availability of the monitored network with no more than 5 minutes of downtime per month.\", \"title\": \"Availability\", \"user_confirmed\": false}, {\"acceptance_criteria\": \"Verify that The system shall process at least 10,000 packets per second without dropping legitimate traffic is demonstrated under test.\", \"category\": \"non_functional\", \"confidence\": \"high\", \"dependencies\": [], \"id\": \"NFR-002\", \"priority\": \"should\", \"rationale\": \"Performance ensures the security controls do not become a bottleneck.\", \"source_references\": [], \"statement\": \"The system shall process at least 10,000 packets per second without dropping legitimate traffic.\", \"title\": \"Performance\", \"user_confirmed\": false}], \"project_overview\": {\"context\": \"Generated deterministically by the CyberSRS mock provider.\", \"description\": \"A campus firewall with segmented networks.\", \"purpose\": \"Deliver a structured SRS for: A campus firewall with segmented networks.\"}, \"references\": [], \"risks\": [{\"description\": \"Budget constraints may limit hardware capacity.\", \"impact\": \"high\", \"likelihood\": \"medium\", \"mitigation\": \"Prioritise essential filtering and monitoring features.\", \"risk_id\": \"RISK-001\"}], \"scope\": {\"in_scope\": [\"CAT-01\"], \"out_of_scope\": [\"Active penetration testing\", \"Malware analysis or exploit development\", \"Automatic network configuration changes\"]}, \"security_requirements\": [{\"acceptance_criteria\": \"Verify that The system shall require multi-factor authentication for all administrative access is demonstrated under test.\", \"category\": \"security\", \"confidence\": \"high\", \"dependencies\": [], \"id\": \"SEC-001\", \"priority\": \"must\", \"rationale\": \"Protects the control plane from unauthorised modification.\", \"source_references\": [], \"statement\": \"The system shall require multi-factor authentication for all administrative access.\", \"title\": \"Authenticated Administration\", \"user_confirmed\": false}, {\"acceptance_criteria\": \"Verify that The system shall store security logs in an encrypted format at rest is demonstrated under test.\", \"category\": \"security\", \"confidence\": \"high\", \"dependencies\": [], \"id\": \"SEC-002\", \"priority\": \"should\", \"rationale\": \"Protects sensitive monitoring data from disclosure.\", \"source_references\": [], \"statement\": \"The system shall store security logs in an encrypted format at rest.\", \"title\": \"Encrypted Logs\", \"user_confirmed\": false}], \"stakeholders\": [\"Project sponsor\", \"End users\", \"Operations team\", \"Security team\"], \"testing_strategy\": [{\"description\": \"Validate that firewall rules block all denied traffic.\", \"recommendation_id\": \"TEST-001\", \"related_requirement_ids\": [\"FR-001\"], \"type\": \"security\"}, {\"description\": \"Verify alert generation for known attack patterns.\", \"recommendation_id\": \"TEST-002\", \"related_requirement_ids\": [\"FR-002\"], \"type\": \"system\"}], \"threats\": [{\"affected_assets\": [\"Campus network infrastructure\"], \"category\": \"Tampering\", \"description\": \"An attacker attempts to bypass the firewall to reach internal systems.\", \"mitigations\": [{\"description\": \"Enforce deny-by-default firewall rules and rate-limit failed connection attempts.\", \"mitigation_id\": \"MIT-001\", \"related_requirement_ids\": [\"FR-001\", \"SEC-001\"]}], \"name\": \"Unauthorised Perimeter Access\", \"severity\": \"high\", \"threat_id\": \"THR-001\"}, {\"affected_assets\": [\"Monitoring servers\"], \"category\": \"Repudiation\", \"description\": \"An attacker with administrative access alters or deletes security logs.\", \"mitigations\": [{\"description\": \"Use append-only, cryptographically signed log storage.\", \"mitigation_id\": \"MIT-002\", \"related_requirement_ids\": [\"SEC-002\"]}], \"name\": \"Log Tampering\", \"severity\": \"medium\", \"threat_id\": \"THR-002\"}], \"unresolved_questions\": [\"Exact compliance standards to be confirmed by the project owner.\"], \"user_roles\": [\"System administrators\", \"Operators\"], \"validation_report\": null}",
+    "final_output": {
+      "metadata": {
+        "project_name": "Phase 5 heldout-test-001 BASE",
+        "version": 1,
+        "generated_at": "2026-08-14T15:17:26.812855Z",
+        "model_name": "cybersrs-mock-1b",
+        "adapter_name": null,
+        "inferred_categories": [
+          "CAT-01"
+        ]
+      },
+      "project_overview": {
+        "description": "A campus firewall with segmented networks.",
+        "purpose": "Deliver a structured SRS for: A campus firewall with segmented networks.",
+        "context": "Generated deterministically by the CyberSRS mock provider."
+      },
+      "scope": {
+        "in_scope": [
+          "CAT-01"
+        ],
+        "out_of_scope": [
+          "Active penetration testing",
+          "Malware analysis or exploit development",
+          "Automatic network configuration changes"
+        ]
+      },
+      "assumptions": [
+        "The system operates within the existing campus network infrastructure.",
+        "Administrative users are trusted and subject to organisational policy."
+      ],
+      "stakeholders": [
+        "Project sponsor",
+        "End users",
+        "Operations team",
+        "Security team"
+      ],
+      "user_roles": [
+        "System administrators",
+        "Operators"
+      ],
+      "functional_requirements": [
+        {
+          "id": "FR-001",
+          "category": "functional",
+          "title": "Traffic Filtering",
+          "statement": "The system shall filter inbound and outbound network traffic according to configurable allow and deny rules.",
+          "rationale": "Filtering is the core control that prevents unauthorised access through the perimeter.",
+          "priority": "must",
+          "acceptance_criteria": "Verify that The system shall filter inbound and outbound network traffic according to configurable allow and deny rules is demonstrated under test.",
+          "dependencies": [],
+          "source_references": [],
+          "confidence": "high",
+          "user_confirmed": false
+        },
+        {
+          "id": "FR-002",
+          "category": "functional",
+          "title": "Monitoring and Alerting",
+          "statement": "The system shall monitor network traffic for suspicious activity and generate alerts for the security team.",
+          "rationale": "Monitoring provides the detection capability required to respond to incidents.",
+          "priority": "must",
+          "acceptance_criteria": "Verify that The system shall monitor network traffic for suspicious activity and generate alerts for the security team is demonstrated under test.",
+          "dependencies": [],
+          "source_references": [],
+          "confidence": "high",
+          "user_confirmed": false
+        },
+        {
+          "id": "FR-003",
+          "category": "functional",
+          "title": "Rule Management",
+          "statement": "The system shall allow administrators to manage firewall rules through a secure interface.",
+          "rationale": "Administrators need a controlled way to update filtering behaviour.",
+          "priority": "should",
+          "acceptance_criteria": "Verify that The system shall allow administrators to manage firewall rules through a secure interface is demonstrated under test.",
+          "dependencies": [],
+          "source_references": [],
+          "confidence": "high",
+          "user_confirmed": false
+        }
+      ],
+      "non_functional_requirements": [
+        {
+          "id": "NFR-001",
+          "category": "non_functional",
+          "title": "Availability",
+          "statement": "The system shall maintain availability of the monitored network with no more than 5 minutes of downtime per month.",
+          "rationale": "Campus operations depend on continuous network availability.",
+          "priority": "must",
+          "acceptance_criteria": "Verify that The system shall maintain availability of the monitored network with no more than 5 minutes of downtime per month is demonstrated under test.",
+          "dependencies": [],
+          "source_references": [],
+          "confidence": "high",
+          "user_confirmed": false
+        },
+        {
+          "id": "NFR-002",
+          "category": "non_functional",
+          "title": "Performance",
+          "statement": "The system shall process at least 10,000 packets per second without dropping legitimate traffic.",
+          "rationale": "Performance ensures the security controls do not become a bottleneck.",
+          "priority": "should",
+          "acceptance_criteria": "Verify that The system shall process at least 10,000 packets per second without dropping legitimate traffic is demonstrated under test.",
+          "dependencies": [],
+          "source_references": [],
+          "confidence": "high",
+          "user_confirmed": false
+        }
+      ],
+      "security_requirements": [
+        {
+          "id": "SEC-001",
+          "category": "security",
+          "title": "Authenticated Administration",
+          "statement": "The system shall require multi-factor authentication for all administrative access.",
+          "rationale": "Protects the control plane from unauthorised modification.",
+          "priority": "must",
+          "acceptance_criteria": "Verify that The system shall require multi-factor authentication for all administrative access is demonstrated under test.",
+          "dependencies": [],
+          "source_references": [],
+          "confidence": "high",
+          "user_confirmed": false
+        },
+        {
+          "id": "SEC-002",
+          "category": "security",
+          "title": "Encrypted Logs",
+          "statement": "The system shall store security logs in an encrypted format at rest.",
+          "rationale": "Protects sensitive monitoring data from disclosure.",
+          "priority": "should",
+          "acceptance_criteria": "Verify that The system shall store security logs in an encrypted format at rest is demonstrated under test.",
+          "dependencies": [],
+          "source_references": [],
+          "confidence": "high",
+          "user_confirmed": false
+        }
+      ],
+      "data_requirements": [
+        {
+          "id": "DATA-001",
+          "category": "data",
+          "title": "Log Retention",
+          "statement": "The system shall retain security logs for at least 90 days.",
+          "rationale": "Retention supports post-incident analysis and compliance.",
+          "priority": "should",
+          "acceptance_criteria": "Verify that The system shall retain security logs for at least 90 days is demonstrated under test.",
+          "dependencies": [],
+          "source_references": [],
+          "confidence": "high",
+          "user_confirmed": false
+        }
+      ],
+      "network_requirements": [
+        {
+          "id": "NET-001",
+          "category": "network",
+          "title": "Network Segmentation",
+          "statement": "The system shall support segmented network zones with distinct filtering policies.",
+          "rationale": "Segmentation limits lateral movement in the campus network.",
+          "priority": "should",
+          "acceptance_criteria": "Verify that The system shall support segmented network zones with distinct filtering policies is demonstrated under test.",
+          "dependencies": [],
+          "source_references": [],
+          "confidence": "high",
+          "user_confirmed": false
+        }
+      ],
+      "architecture_summary": {
+        "overview": "A layered security architecture with a perimeter firewall, monitoring sensors, and a central management plane.",
+        "components": [
+          {
+            "name": "Perimeter Firewall",
+            "description": "Enforces allow/deny filtering rules at the network edge.",
+            "responsibilities": [
+              "Filter traffic",
+              "Block malicious connections"
+            ]
+          },
+          {
+            "name": "Monitoring Server",
+            "description": "Collects and analyses network flow data.",
+            "responsibilities": [
+              "Detect anomalies",
+              "Generate alerts"
+            ]
+          }
+        ],
+        "data_flows": [
+          "Network packets -> Firewall -> Internal segments"
+        ],
+        "deployment_notes": "Deployed on dedicated campus infrastructure."
+      },
+      "threats": [
+        {
+          "threat_id": "THR-001",
+          "name": "Unauthorised Perimeter Access",
+          "description": "An attacker attempts to bypass the firewall to reach internal systems.",
+          "category": "Tampering",
+          "severity": "high",
+          "affected_assets": [
+            "Campus network infrastructure"
+          ],
+          "mitigations": [
+            {
+              "mitigation_id": "MIT-001",
+              "description": "Enforce deny-by-default firewall rules and rate-limit failed connection attempts.",
+              "related_requirement_ids": [
+                "FR-001",
+                "SEC-001"
+              ]
+            }
+          ]
+        },
+        {
+          "threat_id": "THR-002",
+          "name": "Log Tampering",
+          "description": "An attacker with administrative access alters or deletes security logs.",
+          "category": "Repudiation",
+          "severity": "medium",
+          "affected_assets": [
+            "Monitoring servers"
+          ],
+          "mitigations": [
+            {
+              "mitigation_id": "MIT-002",
+              "description": "Use append-only, cryptographically signed log storage.",
+              "related_requirement_ids": [
+                "SEC-002"
+              ]
+            }
+          ]
+        }
+      ],
+      "mitigations": [
+        {
+          "mitigation_id": "MIT-001",
+          "description": "Enforce deny-by-default firewall rules and rate-limit failed connection attempts.",
+          "related_requirement_ids": [
+            "FR-001",
+            "SEC-001"
+          ]
+        },
+        {
+          "mitigation_id": "MIT-002",
+          "description": "Use append-only, cryptographically signed log storage.",
+          "related_requirement_ids": [
+            "SEC-002"
+          ]
+        }
+      ],
+      "testing_strategy": [
+        {
+          "recommendation_id": "TEST-001",
+          "description": "Validate that firewall rules block all denied traffic.",
+          "type": "security",
+          "related_requirement_ids": [
+            "FR-001"
+          ]
+        },
+        {
+          "recommendation_id": "TEST-002",
+          "description": "Verify alert generation for known attack patterns.",
+          "type": "system",
+          "related_requirement_ids": [
+            "FR-002"
+          ]
+        }
+      ],
+      "risks": [
+        {
+          "risk_id": "RISK-001",
+          "description": "Budget constraints may limit hardware capacity.",
+          "likelihood": "medium",
+          "impact": "high",
+          "mitigation": "Prioritise essential filtering and monitoring features."
+        }
+      ],
+      "unresolved_questions": [
+        "Exact compliance standards to be confirmed by the project owner."
+      ],
+      "references": [],
+      "validation_report": null,
+      "generation_metadata": {
+        "model_variant": "base",
+        "model_name": "cybersrs-mock-1b",
+        "provider": "mock",
+        "generation_time_ms": 0,
+        "rag_enabled": false,
+        "retrieval_context": null,
+        "retrieved_chunks": 0,
+        "retrieval_time_ms": 0,
+        "rag_prompt_chunks": 0,
+        "rag_prompt_context_chars": 0,
+        "kb_version": null,
+        "generation_timestamp": "2026-08-14T15:17:26.814855+00:00",
+        "generation_latency_ms": 0,
+        "validation_issues": [
+          {
+            "code": "ACCEPTANCE_CRITERIA_FORMAT",
+            "severity": "warning",
+            "section": "functional_requirements",
+            "requirement_id": "FR-001",
+            "message": "Acceptance criteria should use GIVEN-WHEN-THEN format for testability"
+          },
+          {
+            "code": "ACCEPTANCE_CRITERIA_HIGH_OVERLAP",
+            "severity": "warning",
+            "section": "functional_requirements",
+            "requirement_id": "FR-001",
+            "message": "Acceptance criteria has high word overlap with requirement statement"
+          },
+          {
+            "code": "ACCEPTANCE_CRITERIA_FORMAT",
+            "severity": "warning",
+            "section": "functional_requirements",
+            "requirement_id": "FR-002",
+            "message": "Acceptance criteria should use GIVEN-WHEN-THEN format for testability"
+          },
+          {
+            "code": "ACCEPTANCE_CRITERIA_HIGH_OVERLAP",
+            "severity": "warning",
+            "section": "functional_requirements",
+            "requirement_id": "FR-002",
+            "message": "Acceptance criteria has high word overlap with requirement statement"
+          },
+          {
+            "code": "ACCEPTANCE_CRITERIA_FORMAT",
+            "severity": "warning",
+            "section": "functional_requirements",
+            "requirement_id": "FR-003",
+            "message": "Acceptance criteria should use GIVEN-WHEN-THEN format for testability"
+          },
+          {
+            "code": "ACCEPTANCE_CRITERIA_HIGH_OVERLAP",
+            "severity": "warning",
+            "section": "functional_requirements",
+            "requirement_id": "FR-003",
+            "message": "Acceptance criteria has high word overlap with requirement statement"
+          },
+          {
+            "code": "ACCEPTANCE_CRITERIA_FORMAT",
+            "severity": "warning",
+            "section": "non_functional_requirements",
+            "requirement_id": "NFR-001",
+            "message": "Acceptance criteria should use GIVEN-WHEN-THEN format for testability"
+          },
+          {
+            "code": "ACCEPTANCE_CRITERIA_HIGH_OVERLAP",
+            "severity": "warning",
+            "section": "non_functional_requirements",
+            "requirement_id": "NFR-001",
+            "message": "Acceptance criteria has high word overlap with requirement statement"
+          },
+          {
+            "code": "ACCEPTANCE_CRITERIA_FORMAT",
+            "severity": "warning",
+            "section": "non_functional_requirements",
+            "requirement_id": "NFR-002",
+            "message": "Acceptance criteria should use GIVEN-WHEN-THEN format for testability"
+          },
+          {
+            "code": "ACCEPTANCE_CRITERIA_HIGH_OVERLAP",
+            "severity": "warning",
+            "section": "non_functional_requirements",
+            "requirement_id": "NFR-002",
+            "message": "Acceptance criteria has high word overlap with requirement statement"
+          },
+          {
+            "code": "ACCEPTANCE_CRITERIA_FORMAT",
+            "severity": "warning",
+            "section": "security_requirements",
+            "requirement_id": "SEC-001",
+            "message": "Acceptance criteria should use GIVEN-WHEN-THEN format for testability"
+          },
+          {
+            "code": "ACCEPTANCE_CRITERIA_HIGH_OVERLAP",
+            "severity": "warning",
+            "section": "security_requirements",
+            "requirement_id": "SEC-001",
+            "message": "Acceptance criteria has high word overlap with requirement statement"
+          },
+          {
+            "code": "ACCEPTANCE_CRITERIA_FORMAT",
+            "severity": "warning",
+            "section": "security_requirements",
+            "requirement_id": "SEC-002",
+            "message": "Acceptance criteria should use GIVEN-WHEN-THEN format for testability"
+          },
+          {
+            "code": "ACCEPTANCE_CRITERIA_HIGH_OVERLAP",
+            "severity": "warning",
+            "section": "security_requirements",
+            "requirement_id": "SEC-002",
+            "message": "Acceptance criteria has high word overlap with requirement statement"
+          },
+          {
+            "code": "ACCEPTANCE_CRITERIA_FORMAT",
+            "severity": "warning",
+            "section": "data_requirements",
+            "requirement_id": "DATA-001",
+            "message": "Acceptance criteria should use GIVEN-WHEN-THEN format for testability"
+          },
+          {
+            "code": "ACCEPTANCE_CRITERIA_HIGH_OVERLAP",
+            "severity": "warning",
+            "section": "data_requirements",
+            "requirement_id": "DATA-001",
+            "message": "Acceptance criteria has high word overlap with requirement statement"
+          },
+          {
+            "code": "ACCEPTANCE_CRITERIA_FORMAT",
+            "severity": "warning",
+            "section": "network_requirements",
+            "requirement_id": "NET-001",
+            "message": "Acceptance criteria should use GIVEN-WHEN-THEN format for testability"
+          },
+          {
+            "code": "ACCEPTANCE_CRITERIA_HIGH_OVERLAP",
+            "severity": "warning",
+            "section": "network_requirements",
+            "requirement_id": "NET-001",
+            "message": "Acceptance criteria has high word overlap with requirement statement"
+          }
+        ]
+      }
+    },
+    "raw_metrics": {
+      "json_valid": true,
+      "schema_valid": true,
+      "requirement_count": 9,
+      "functional_requirement_count": 3,
+      "non_functional_requirement_count": 2,
+      "security_requirement_count": 2,
+      "data_requirement_count": 1,
+      "network_requirement_count": 1,
+      "threat_count": 0,
+      "clarification_count": 2,
+      "missing_statements": 0,
+      "missing_acceptance_criteria": 0,
+      "invalid_priorities": 0,
+      "double_shall_violations": 0,
+      "acceptance_criteria_format_warnings": 9,
+      "acceptance_criteria_paraphrases": 0,
+      "unsupported_numeric_claims": 0,
+      "numeric_provenance_violations": 0,
+      "generic_rationale_violations": 0,
+      "citation_count": 0,
+      "citation_presence_rate": 0.0,
+      "valid_citation_count": 0,
+      "invalid_citation_count": 0,
+      "retrieval_success": false,
+      "retrieved_chunk_count": 0,
+      "atomicity_violations": null,
+      "atomicity_metric_status": "manual_unsupported"
+    },
+    "final_metrics": {
+      "json_valid": true,
+      "schema_valid": true,
+      "requirement_count": 9,
+      "functional_requirement_count": 3,
+      "non_functional_requirement_count": 2,
+      "security_requirement_count": 2,
+      "data_requirement_count": 1,
+      "network_requirement_count": 1,
+      "threat_count": 0,
+      "clarification_count": 2,
+      "missing_statements": 0,
+      "missing_acceptance_criteria": 0,
+      "invalid_priorities": 0,
+      "double_shall_violations": 0,
+      "acceptance_criteria_format_warnings": 9,
+      "acceptance_criteria_paraphrases": 0,
+      "unsupported_numeric_claims": 0,
+      "numeric_provenance_violations": 0,
+      "generic_rationale_violations": 0,
+      "citation_count": 0,
+      "citation_presence_rate": 0.0,
+      "valid_citation_count": 0,
+      "invalid_citation_count": 0,
+      "retrieval_success": false,
+      "retrieved_chunk_count": 0,
+      "atomicity_violations": null,
+      "atomicity_metric_status": "manual_unsupported",
+      "validation_score": 100,
+      "deterministic_validation_applied": true,
+      "deterministic_repair_applied": true
+    },
+    "retrieval_metadata": {
+      "knowledge_base_version": null,
+      "retrieved_chunk_ids": [],
+      "retrieved_document_ids": [],
+      "citation_ids": []
+    },
+    "latencies": {
+      "analysis_seconds": 0.019042199999603326,
+      "clarification_seconds": 0.01976970000032452,
+      "srs_seconds": 0.025747399999090703,
+      "total_seconds": 0.16632509999908507
+    },
+    "inferred_categories": [
+      "CAT-01"
+    ],
+    "category_accuracy": 0.0,
+    "errors": {
+      "analysis": null,
+      "clarification": null,
+      "srs": null
+    }
+  }
+]

@@ -1,0 +1,199 @@
+[
+  {
+    "case_id": "eval-001",
+    "description": "I want to build a firewall and network monitoring system for a college campus with separate student, faculty, laboratory and administrative networks.",
+    "expected_categories": [
+      "CAT-02",
+      "CAT-03"
+    ],
+    "latency": {
+      "analysis_seconds": 7.0616700649261475,
+      "clarification_seconds": 6.680274724960327,
+      "srs_seconds": 75.44273591041565,
+      "total_seconds": 89.18468070030212
+    },
+    "retry_counts": {
+      "analysis": 0,
+      "clarification": 0,
+      "srs": 0
+    },
+    "success": {
+      "analysis": true,
+      "clarification": true,
+      "srs": true
+    },
+    "analysis": {
+      "json_valid": true,
+      "schema_valid": true,
+      "inferred_categories": [
+        "CAT-02",
+        "CAT-03"
+      ],
+      "category_accuracy": 1.0,
+      "missing_info_count": 4
+    },
+    "clarification": {
+      "json_valid": true,
+      "schema_valid": true,
+      "question_count": 4,
+      "questions_have_target_gap": 4,
+      "questions_have_reason": 4
+    },
+    "srs": {
+      "json_valid": true,
+      "schema_valid": true,
+      "requirement_count": 9,
+      "duplicate_requirement_ids": [],
+      "missing_statements": 0,
+      "missing_acceptance_criteria": 0,
+      "invalid_priorities": 0,
+      "requirements_by_category": {
+        "functional": 3,
+        "non_functional": 2,
+        "security": 2,
+        "data": 1,
+        "network": 1
+      },
+      "threat_count": 5,
+      "has_architecture": true,
+      "has_testing_strategy": false,
+      "has_risks": true
+    },
+    "errors": {
+      "analysis": null,
+      "clarification": null,
+      "srs": null
+    }
+  },
+  {
+    "case_id": "eval-005",
+    "description": "Design a secure API gateway for a fintech startup. Must handle authentication (OAuth 2.0, API keys), rate limiting, input validation, and protect against OWASP API Top 10 risks.",
+    "expected_categories": [
+      "CAT-05"
+    ],
+    "latency": {
+      "analysis_seconds": 8.00589895248413,
+      "clarification_seconds": 7.941482782363892,
+      "srs_seconds": 98.7199821472168,
+      "total_seconds": 114.66736388206482
+    },
+    "retry_counts": {
+      "analysis": 0,
+      "clarification": 0,
+      "srs": 0
+    },
+    "success": {
+      "analysis": true,
+      "clarification": true,
+      "srs": false
+    },
+    "analysis": {
+      "json_valid": true,
+      "schema_valid": true,
+      "inferred_categories": [
+        "CAT-04",
+        "CAT-05",
+        "CAT-07"
+      ],
+      "category_accuracy": 0.3333333333333333,
+      "missing_info_count": 4
+    },
+    "clarification": {
+      "json_valid": true,
+      "schema_valid": true,
+      "question_count": 4,
+      "questions_have_target_gap": 4,
+      "questions_have_reason": 4
+    },
+    "srs": {
+      "json_valid": false,
+      "schema_valid": false,
+      "requirement_count": 0,
+      "duplicate_requirement_ids": [],
+      "missing_statements": 0,
+      "missing_acceptance_criteria": 0,
+      "invalid_priorities": 0,
+      "requirements_by_category": {
+        "functional": 0,
+        "non_functional": 0,
+        "security": 0,
+        "data": 0,
+        "network": 0
+      },
+      "threat_count": 0,
+      "has_architecture": false,
+      "has_testing_strategy": false,
+      "has_risks": false
+    },
+    "errors": {
+      "analysis": null,
+      "clarification": null,
+      "srs": "Deterministic validation failed: UNSUPPORTED_NUMERIC_CONSTRAINT: Unsupported numeric constraint detected (response time / latency): '200 milliseconds' must be USER_SPECIFIED, RAG_SUPPORTED (with citation), or ASSUMPTION_REQUIRING_CONFIRMATION"
+    }
+  },
+  {
+    "case_id": "eval-007",
+    "description": "Design an identity and access management system for a healthcare provider with 5000 staff. Must support SSO, MFA, RBAC, user provisioning, and audit logging for HIPAA compliance.",
+    "expected_categories": [
+      "CAT-04"
+    ],
+    "latency": {
+      "analysis_seconds": 8.38779902458191,
+      "clarification_seconds": 16.841548442840576,
+      "srs_seconds": 111.18433356285095,
+      "total_seconds": 136.41368103027344
+    },
+    "retry_counts": {
+      "analysis": 0,
+      "clarification": 0,
+      "srs": 0
+    },
+    "success": {
+      "analysis": true,
+      "clarification": true,
+      "srs": false
+    },
+    "analysis": {
+      "json_valid": true,
+      "schema_valid": true,
+      "inferred_categories": [
+        "CAT-04",
+        "CAT-07"
+      ],
+      "category_accuracy": 0.5,
+      "missing_info_count": 4
+    },
+    "clarification": {
+      "json_valid": true,
+      "schema_valid": true,
+      "question_count": 4,
+      "questions_have_target_gap": 4,
+      "questions_have_reason": 4
+    },
+    "srs": {
+      "json_valid": false,
+      "schema_valid": false,
+      "requirement_count": 0,
+      "duplicate_requirement_ids": [],
+      "missing_statements": 0,
+      "missing_acceptance_criteria": 0,
+      "invalid_priorities": 0,
+      "requirements_by_category": {
+        "functional": 0,
+        "non_functional": 0,
+        "security": 0,
+        "data": 0,
+        "network": 0
+      },
+      "threat_count": 0,
+      "has_architecture": false,
+      "has_testing_strategy": false,
+      "has_risks": false
+    },
+    "errors": {
+      "analysis": null,
+      "clarification": null,
+      "srs": "Deterministic validation failed: GENERIC_RATIONALE: Rationale uses forbidden generic phrase: 'derived from the project context'; GENERIC_RATIONALE: Rationale uses forbidden generic phrase: 'derived from the project context'"
+    }
+  }
+]

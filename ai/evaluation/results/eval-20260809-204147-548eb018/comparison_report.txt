@@ -1,0 +1,141 @@
+======================================================================
+CYBERSRS COMPARATIVE EVALUATION REPORT
+======================================================================
+Run ID: eval-20260809-204147-548eb018
+Timestamp: 2026-08-09T20:41:47.819091+00:00
+Provider: ollama
+Model: qwen3:4b-instruct-2507-q4_K_M (Ollama)
+Embedding: nomic-embed-text
+Vector DB: ChromaDB (cybersrs_knowledge, 4470 chunks)
+Cases: 3 (same held-out set for both)
+
+======================================================================
+1. BASE METRICS (BASE_QWEN)
+======================================================================
+  Total Cases:          3
+  Fully Successful:     3
+  Analysis Success:     100.0%
+  Clarification Succ:   100.0%
+  SRS Success:          100.0%
+  Analysis Schema Valid: 100.0%
+  SRS Schema Valid:      100.0%
+  Category Accuracy:     0.611 ± 0.283
+  Avg Requirements/SRS:  11.7
+  Duplicate ID Rate:     0.000
+  Missing Statement:     0.000
+  Missing Acceptance:    0.000
+  Invalid Priority:      0.000
+  Avg Questions/Case:    3.7
+  Target Gap Coverage:   100.0%
+  Avg Analysis Latency:  7.71s
+  Avg Clarification Lat: 11.70s
+  Avg SRS Latency:       87.06s
+  Avg Total Latency:     106.47s
+
+======================================================================
+2. RAG METRICS (BASE_QWEN_RAG)
+======================================================================
+  Total Cases:          3
+  Fully Successful:     3
+  Analysis Success:     100.0%
+  Clarification Succ:   100.0%
+  SRS Success:          100.0%
+  Analysis Schema Valid: 100.0%
+  SRS Schema Valid:      100.0%
+  Category Accuracy:     0.583 ± 0.312
+  Avg Requirements/SRS:  12.3
+  Duplicate ID Rate:     0.000
+  Missing Statement:     0.000
+  Missing Acceptance:    0.000
+  Invalid Priority:      0.000
+  Avg Questions/Case:    3.7
+  Target Gap Coverage:   100.0%
+  Avg Analysis Latency:  7.97s
+  Avg Clarification Lat: 12.40s
+  Avg SRS Latency:       106.59s
+  Avg Total Latency:     126.95s
+
+--- RAG-Specific Metrics ---
+  Retrieval Success:     100.0%
+  Avg Retrieval Latency: 1.55s
+  Avg Chunks Retrieved:  27.3
+  Citation Presence:     100.0%
+  Citation Validity:     100.0%
+  Citation Precision:    1.000
+  Citation Support:      1.000
+  Unsupported Cites:     0.000
+  Relevant Source Retrieval: 0.000
+  Security Req Coverage: 1.000
+  Hallucination Rate:    0.000
+  RAG Overhead:          19.53s
+
+======================================================================
+3. ABSOLUTE DIFFERENCES (RAG - BASE)
+======================================================================
+  Analysis Success Rate:      +0.000
+  Clarification Success Rate: +0.000
+  SRS Success Rate:           +0.000
+  Analysis Schema Validity:   +0.000
+  SRS Schema Validity:        +0.000
+  Category Accuracy:          -0.028
+  Avg Requirements/SRS:       +0.7
+  Duplicate ID Rate:          +0.000
+  Missing Statement Rate:     +0.000
+  Missing Acceptance Rate:    +0.000
+  Invalid Priority Rate:      +0.000
+  Avg Questions/Case:         +0.0
+  Target Gap Coverage:        +0.000
+  Avg Analysis Latency:       +0.25s
+  Avg Clarification Latency:  +0.70s
+  Avg SRS Latency:            +19.53s
+  Avg Total Latency:          +20.49s
+
+======================================================================
+4. ANALYSIS
+======================================================================
+IMPROVEMENTS WITH RAG:
+  + Citation precision: 100.0%
+  + Citations present in 100.0% of cases
+  + Security requirement coverage: 100.0%
+  + Low hallucination indicator rate: 0.0%
+
+REGRESSIONS WITH RAG:
+  - SRS latency increased by 19.5s (RAG overhead)
+  - Total latency increased by 20.5s
+  - Category accuracy decreased by 0.028
+
+UNCHANGED:
+  - Analysis success rate
+  - Clarification success rate
+  - SRS success rate
+  - Missing statement rate
+  - Invalid priority rate
+
+LATENCY COST: RAG adds ~19.5s overhead per SRS generation
+
+======================================================================
+5. MILESTONE STATUS
+======================================================================
+RAG Milestone Checks: 8/8 passed
+
+  [PASS] Retrieval success >= 90%
+  [PASS] Citation presence >= 50%
+  [PASS] Citation precision >= 70%
+  [PASS] Unsupported citations <= 20%
+  [PASS] Schema validity >= 95%
+  [PASS] Security coverage >= 50%
+  [PASS] Latency overhead <= 30s
+  [PASS] Hallucination rate <= 15%
+
+OVERALL: RAG MILESTONE PASSES
+
+======================================================================
+6. RESULT LOCATIONS
+======================================================================
+  Base case metrics:    ai/evaluation/results/eval-20260809-204147-548eb018/base_case_metrics.json
+  RAG case metrics:     ai/evaluation/results/eval-20260809-204147-548eb018/rag_case_metrics.json
+  Base aggregate:       ai/evaluation/results/eval-20260809-204147-548eb018/base_aggregate_metrics.json
+  RAG aggregate:        ai/evaluation/results/eval-20260809-204147-548eb018/rag_aggregate_metrics.json
+  Comparison JSON:      ai/evaluation/results/eval-20260809-204147-548eb018/comparison.json
+  Run metadata:         ai/evaluation/results/eval-20260809-204147-548eb018/run_metadata.json
+  Human report:         ai/evaluation/results/eval-20260809-204147-548eb018/comparison_report.txt

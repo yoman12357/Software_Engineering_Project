@@ -1,0 +1,9 @@
+{
+  "run_id": "eval-20260808-122050-c0ade9c9",
+  "timestamp": "2026-08-08T12:20:50.906672+00:00",
+  "provider": "ollama",
+  "model_name": "qwen3:4b-instruct-2507-q4_K_M",
+  "dataset_path": "ai/evaluation/dataset.json",
+  "total_cases": 10,
+  "api_base": "http://127.0.0.1:8000/api/v1"
+}
