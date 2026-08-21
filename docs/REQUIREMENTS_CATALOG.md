@@ -110,6 +110,23 @@
 | FR-072 | FR       | The system shall include a table of contents, requirement traceability matrix, and references in the PDF. | Should   | Professional document standards.        | PDF contains these sections.                                                            | 6     | FR-070         | Inspection   |
 | FR-073 | FR       | The system shall generate the PDF from the validated JSON structure, not from raw LLM text.               | Must     | Ensures data integrity and consistency. | PDF generation reads from the SRSVersion JSON, not from LLM responses.                  | 6     | FR-046, FR-070 | Inspection   |
 
+### Conversational Assistant
+
+| ID | Category | Statement | Priority | Rationale | Acceptance Criteria | Phase | Dependencies | Verification |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| FR-080 | FR | The system shall answer general cybersecurity questions through a conversational interface. | Must | Users need assistance before and during SRS creation. | A message submitted in a new chat produces a visible assistant response without creating a project unless project generation is confirmed. | Chat | AI-001 | Test, Demonstration |
+| FR-081 | FR | The conversational assistant shall retrieve relevant local knowledge and return validated source citations with grounded answers. | Must | Chat answers must use the existing cybersecurity knowledge base transparently. | A supported cybersecurity question returns validated citations carrying chunk and document metadata; retrieval failure is surfaced as a warning. | Chat | RAG-004, AI-004 | Test |
+| FR-082 | FR | The system shall preserve a detected project description until the user confirms SRS generation. | Must | A confirmation command must not replace the actual project description. | After a project description followed by "generate SRS", the created Project contains the original description. | Chat | FR-001, FR-010 | Test |
+| FR-083 | FR | The system shall surface chat delivery and model failures without silently removing the user's message. | Must | Silent failures make the application appear unresponsive. | The submitted message remains visible and the UI shows a retryable error when the backend, Ollama, or RAG is unavailable. | Chat | NFR-020 | Test |
+| FR-084 | FR | The system shall route general conversation to the base main model without requiring RAG. | Must | General questions must remain useful when the knowledge base has no relevant material. | A non-SRS, non-cybersecurity question is answered by the base Qwen provider and does not invoke retrieval. | Chat | AI-001 | Test |
+| FR-085 | FR | The system shall route project analysis, clarification, SRS generation, and SRS editing to the configured SRS-task model variant. | Must | A requirements-engineering adapter must not change general-chat behaviour. | Enabling the fine-tuned variant changes the SRS-task provider while general chat continues to use the base model. | SRS | AI-008 | Test |
+| FR-086 | FR | The system shall accept safe project-scoped reference documents in PDF, Markdown, text, and CSV formats. | Must | Users need to provide existing specifications and constraints as SRS context. | A supported file within configured size/count limits is parsed, stored locally, listed for its project, and can be deleted. | SRS | SEC-018, DATA-003 | Test |
+| FR-087 | FR | The system shall use uploaded project documents during analysis and RAG-assisted SRS generation without adding them to the global knowledge base. | Must | Project material must improve output without contaminating other projects. | Analysis receives bounded extracted document context and project retrieval filters results by project ID. | SRS | FR-086, RAG-005 | Test |
+| FR-088 | FR | The system shall recognize a project-specific SRS request or requirements document as the start of the guided SRS workflow and shall require a clarification review before generation. | Must | Detailed specifications must not be treated as ordinary chat or bypass user review. | A detailed message containing an SRS/requirements request and a project domain is analysed immediately, presents clarification or confirmation questions, and generates only after answers are submitted. | Chat | FR-010, FR-020, FR-082 | Test, Demonstration |
+| FR-089 | FR | The system shall permanently delete a selected locally stored chat and remove it from the sidebar immediately. | Must | Users need predictable control over locally retained conversations. | Confirming deletion removes the session from local persistence and the sidebar without a page reload; deleting the active chat opens a clean new chat. | Chat | DATA-001 | Test, Demonstration |
+| FR-090 | FR | The system shall allow users to pin and unpin locally stored chats. | Should | Important conversations should remain easy to find. | Pin state persists across reloads, pinned chats appear in a Pinned group above date groups, and unpinning returns the chat to date ordering. | Chat | FR-089 | Test, Demonstration |
+| FR-091 | FR | The system shall persist chat sessions and their ordered messages in the local SQLite database. | Must | Conversation history must survive browser storage clearing and remain within the local-first boundary. | Creating, updating, restoring, pinning, renaming, and deleting a chat round-trip through the backend; project deletion cascades to associated chats. | Chat | DATA-001, FR-089 | Test, Demonstration |
+
 ---
 
 ## Non-Functional Requirements (NFR)
@@ -211,12 +228,12 @@
 
 | Category       | Count   | Notes                                      |
 | -------------- | ------- | ------------------------------------------ |
-| FR             | 33      | Catalogue §2                               |
-| NFR            | 15      | Catalogue §3                               |
+| FR             | 55      | Catalogue §2                               |
+| NFR            | 14      | Catalogue §3                               |
 | SEC            | 7       | Catalogue §4 (SEC-001–SEC-007)             |
 | SEC (extended) | 43      | SECURITY_REQUIREMENTS.md (SEC-008–SEC-050) |
 | DATA           | 5       | Catalogue §7                               |
 | AI             | 9       | Catalogue §5                               |
 | RAG            | 8       | Catalogue §6                               |
 | UX             | 8       | Catalogue §8                               |
-| **Total**      | **128** | 85 + 43 extended security requirements     |
+| **Total**      | **149** | 106 + 43 extended security requirements    |

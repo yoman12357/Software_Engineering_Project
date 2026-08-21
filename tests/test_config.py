@@ -16,7 +16,7 @@ def test_default_settings_apply() -> None:
     # Embeddings must default to the local nomic-embed-text model.
     assert settings.embedding_model == "nomic-embed-text"
     assert settings.model_name == "qwen3:4b-instruct-2507-q4_K_M"
-    assert settings.ollama_num_predict == 4096
+    assert settings.ollama_num_predict == 5200
     assert settings.ollama_repeat_penalty == 1.1
     assert settings.ollama_repeat_last_n == 256
     assert settings.ollama_temperature == 0.0

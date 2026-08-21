@@ -2,6 +2,9 @@
 
 from fastapi.testclient import TestClient
 
+from src.core.config import Settings
+from src.main import create_app
+
 
 def test_create_project(client: TestClient, sample_project_payload: dict) -> None:
     """A valid project is created with 201 and persisted fields."""
@@ -14,6 +17,40 @@ def test_create_project(client: TestClient, sample_project_payload: dict) -> Non
     assert body["id"]
     assert "created_at" in body
     assert "updated_at" in body
+
+
+def test_create_project_returns_conflict_when_project_limit_is_reached() -> None:
+    """The configured project cap produces an actionable error instead of HTTP 500."""
+    settings = Settings(
+        _env_file=None,
+        env="testing",
+        log_level="WARNING",
+        database_url="sqlite:///:memory:",
+        llm_provider="mock",
+        max_projects=1,
+    )
+    application = create_app(settings)
+    payload = {
+        "name": "Campus Firewall",
+        "description": "A firewall and network monitoring system for a college campus.",
+    }
+
+    with TestClient(application) as limited_client:
+        assert limited_client.post("/api/v1/projects", json=payload).status_code == 201
+        response = limited_client.post(
+            "/api/v1/projects",
+            json={**payload, "name": "Second Project"},
+        )
+
+    assert response.status_code == 409
+    assert response.json()["error"] == {
+        "code": "project_limit_reached",
+        "message": (
+            "Maximum project limit (1) reached. "
+            "Delete an existing project from the Dashboard and try again."
+        ),
+        "details": {},
+    }
 
 
 def test_create_project_trims_whitespace(client: TestClient) -> None:

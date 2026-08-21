@@ -346,6 +346,39 @@ class MarkdownParser(DocumentParser):
         return sections
 
 
+class TextParser(DocumentParser):
+    """Parse plain text documents."""
+
+    supported_extensions = {".txt"}
+
+    def parse(self, file_path: Path, settings: Settings) -> ParsedDocument:
+        if not file_path.exists():
+            raise DocumentParserError(f"File not found: {file_path}")
+
+        try:
+            with open(file_path, encoding="utf-8") as f:
+                content = f.read()
+        except UnicodeDecodeError:
+            with open(file_path, encoding="utf-8", errors="replace") as f:
+                content = f.read()
+        except Exception as e:
+            raise DocumentParserError(f"Failed to read text file: {e}") from e
+
+        sections = [
+            DocumentSection(
+                heading=file_path.stem,
+                level=1,
+                content=content.strip(),
+                start_char=0,
+                end_char=len(content.strip()),
+            )
+        ]
+
+        metadata = {"parser": "text", "char_count": len(content)}
+
+        return ParsedDocument(text=content.strip(), sections=sections, metadata=metadata)
+
+
 class CSVParser(DocumentParser):
     """Parse CSV documents.
 
@@ -445,6 +478,7 @@ def get_parser(file_path: Path, settings: Settings) -> DocumentParser:
         PDFParser(),
         MarkdownParser(),
         CSVParser(),
+        TextParser(),
     ]
 
     for parser in parsers:

@@ -1,19 +1,39 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { cn } from "../../lib/utils";
-import { FileText, Shield, Settings, Download, Edit, Search } from "lucide-react";
+import {
+  FileText,
+  Shield,
+  Settings,
+  Download,
+  Edit,
+  Search,
+  ExternalLink,
+  Eye,
+  FileJson,
+  History,
+  RefreshCw,
+  CheckCircle2,
+} from "lucide-react";
 import { Button } from "../../components/ui/Button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../../components/ui/Tabs";
 import { ScrollArea } from "../../components/ui/ScrollArea";
+import { Badge } from "../../components/ui/Badge";
 import { RequirementCard } from "./RequirementCard";
 import { ProvenanceIndicator } from "./ProvenanceIndicator";
 import { api } from "../../api/client";
+import { buildSrsRoute } from "../../lib/routes";
+import { downloadTextFile, srsToMarkdown } from "../../lib/srsExport";
 import type {
   ArtifactProvenanceResponse,
   Requirement,
+  SourceChunk,
   SourceReference,
   SRSSchema,
+  SRSVersionSummary,
+  SRSRegeneratableSection,
+  SRSValidationResponse,
 } from "../../api/types";
 
 interface SRSWorkspaceProps {
@@ -28,6 +48,16 @@ export function SRSWorkspace({ projectId, srs, versionId }: SRSWorkspaceProps) {
   const [activeTab, setActiveTab] = useState<string>("functional");
   const [showSources, setShowSources] = useState(false);
   const [provenance, setProvenance] = useState<ArtifactProvenanceResponse | null>(null);
+  const [sources, setSources] = useState<SourceChunk[]>([]);
+  const [sourcesLoading, setSourcesLoading] = useState(false);
+  const [sourcesError, setSourcesError] = useState<string | null>(null);
+  const [exportingPdf, setExportingPdf] = useState(false);
+  const [previewPdf, setPreviewPdf] = useState<string | null>(null);
+  const [versions, setVersions] = useState<SRSVersionSummary[]>([]);
+  const [versionsError, setVersionsError] = useState<string | null>(null);
+  const [validation, setValidation] = useState<SRSValidationResponse | null>(null);
+  const [validating, setValidating] = useState(false);
+  const [regenerating, setRegenerating] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -42,6 +72,138 @@ export function SRSWorkspace({ projectId, srs, versionId }: SRSWorkspaceProps) {
       active = false;
     };
   }, [projectId, versionId]);
+
+  useEffect(() => {
+    let active = true;
+    api.listSrsVersions(projectId)
+      .then((result) => {
+        if (active) setVersions(result.versions);
+      })
+      .catch(() => {
+        if (active) setVersionsError("Version history could not be loaded.");
+      });
+    return () => {
+      active = false;
+    };
+  }, [projectId, versionId]);
+
+  const handlePreviewPdf = async () => {
+    setExportingPdf(true);
+    try {
+      const blob = await api.exportSrsPdf(projectId, versionId);
+      const url = URL.createObjectURL(blob);
+      setPreviewPdf(url);
+    } catch (err) {
+      setSourcesError(err instanceof Error ? err.message : "PDF preview failed");
+    } finally {
+      setExportingPdf(false);
+    }
+  };
+
+  const closePreview = () => {
+    if (previewPdf) {
+      URL.revokeObjectURL(previewPdf);
+      setPreviewPdf(null);
+    }
+  };
+
+  const loadSources = useCallback(async () => {
+    setSourcesLoading(true);
+    setSourcesError(null);
+    try {
+      const result = await api.getSrsSources(projectId, versionId);
+      setSources(result.sources);
+    } catch {
+      setSourcesError("Failed to load source chunks. RAG knowledge base may be unavailable.");
+    } finally {
+      setSourcesLoading(false);
+    }
+  }, [projectId, versionId]);
+
+  const handleExportPdf = async () => {
+    setExportingPdf(true);
+    try {
+      const blob = await api.exportSrsPdf(projectId, versionId);
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      const projectName = (srs.metadata.project_name || "srs")
+        .replace(/[^a-z0-9]+/gi, "-")
+        .toLowerCase();
+      link.download = `srs_${projectName}_v${srs.metadata.version}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      setSourcesError(err instanceof Error ? err.message : "PDF export failed");
+    } finally {
+      setExportingPdf(false);
+    }
+  };
+
+  const exportBaseName = (srs.metadata.project_name || "srs")
+    .replace(/[^a-z0-9]+/gi, "-")
+    .toLowerCase();
+
+  const handleExportMarkdown = () => {
+    downloadTextFile(
+      srsToMarkdown(srs),
+      `srs_${exportBaseName}_v${srs.metadata.version}.md`,
+      "text/markdown;charset=utf-8",
+    );
+  };
+
+  const handleExportJson = () => {
+    downloadTextFile(
+      JSON.stringify(srs, null, 2),
+      `srs_${exportBaseName}_v${srs.metadata.version}.json`,
+      "application/json;charset=utf-8",
+    );
+  };
+
+  const regeneratableSections: Partial<Record<string, SRSRegeneratableSection>> = {
+    functional: "functional_requirements",
+    security: "security_requirements",
+    "non-functional": "non_functional_requirements",
+    data: "data_requirements",
+    network: "network_requirements",
+    architecture: "architecture_summary",
+    threats: "threats",
+  };
+
+  const handleValidate = async () => {
+    setValidating(true);
+    setSourcesError(null);
+    try {
+      setValidation(await api.validateSrsVersion(projectId, versionId));
+    } catch (error) {
+      setSourcesError(error instanceof Error ? error.message : "Validation failed.");
+    } finally {
+      setValidating(false);
+    }
+  };
+
+  const handleRegenerateSection = async () => {
+    const section = regeneratableSections[activeTab];
+    if (!section) return;
+    setRegenerating(true);
+    setSourcesError(null);
+    try {
+      const regenerated = await api.regenerateSrsSection(projectId, versionId, section);
+      window.location.hash = buildSrsRoute(projectId, regenerated.id);
+    } catch (error) {
+      setSourcesError(error instanceof Error ? error.message : "Section regeneration failed.");
+    } finally {
+      setRegenerating(false);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === "sources") {
+      loadSources();
+    }
+  }, [activeTab, loadSources]);
 
   const tabs = [
     { id: "overview", label: "Overview", icon: FileText },
@@ -98,14 +260,55 @@ export function SRSWorkspace({ projectId, srs, versionId }: SRSWorkspaceProps) {
 
         <div className="flex-1" />
 
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" onClick={() => window.location.hash = `/srs/${versionId}/edit`}>
+        <div className="flex flex-wrap items-center justify-end gap-2">
+          <label className="flex items-center gap-2 text-sm text-muted-foreground">
+            <History className="h-4 w-4" />
+            <span className="sr-only">SRS version</span>
+            <select
+              aria-label="SRS version"
+              value={versionId}
+              onChange={(event) => {
+                window.location.hash = buildSrsRoute(projectId, event.target.value);
+              }}
+              className="rounded-md border border-border bg-card px-2 py-1.5 text-foreground"
+            >
+              {versions.length === 0 && <option value={versionId}>Version {srs.metadata.version}</option>}
+              {versions.map((version) => (
+                <option key={version.id} value={version.id}>
+                  Version {version.version_number} · {version.status}
+                </option>
+              ))}
+            </select>
+          </label>
+          <Button variant="ghost" size="sm" onClick={() => window.location.hash = buildSrsRoute(projectId, versionId, true)}>
             <Edit className="h-4 w-4 mr-2" />
             Edit
           </Button>
-          <Button variant="outline" size="sm" disabled>
+          <Button variant="secondary" size="sm" onClick={handlePreviewPdf} loading={exportingPdf} disabled={exportingPdf}>
+            <Eye className="h-4 w-4 mr-2" />
+            Preview PDF
+          </Button>
+          <Button data-action="export-pdf" variant="outline" size="sm" onClick={handleExportPdf} loading={exportingPdf} disabled={exportingPdf}>
             <Download className="h-4 w-4 mr-2" />
             Export PDF
+          </Button>
+          <Button variant="ghost" size="sm" onClick={handleValidate} loading={validating} disabled={validating}>
+            <CheckCircle2 className="h-4 w-4 mr-2" />
+            Validate
+          </Button>
+          {regeneratableSections[activeTab] && (
+            <Button data-action="regenerate-section" variant="ghost" size="sm" onClick={handleRegenerateSection} loading={regenerating} disabled={regenerating}>
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Regenerate Section
+            </Button>
+          )}
+          <Button variant="ghost" size="sm" onClick={handleExportMarkdown}>
+            <Download className="h-4 w-4 mr-2" />
+            Markdown
+          </Button>
+          <Button variant="ghost" size="sm" onClick={handleExportJson}>
+            <FileJson className="h-4 w-4 mr-2" />
+            JSON
           </Button>
           <Button variant="ghost" size="sm" onClick={() => setShowSources(!showSources)}>
             <Search className="h-4 w-4 mr-2" />
@@ -117,6 +320,12 @@ export function SRSWorkspace({ projectId, srs, versionId }: SRSWorkspaceProps) {
       {/* Metadata bar */}
       <div className="mb-4 border-b border-border pb-3">
         <ProvenanceIndicator provenance={provenance} fallback={srs} />
+        {versionsError && <p className="mt-2 text-xs text-red-400">{versionsError}</p>}
+        {validation && (
+          <p className="mt-2 text-xs text-muted-foreground" role="status">
+            Validation score: {validation.overall_score}/100 · {validation.issues.length} issue{validation.issues.length === 1 ? "" : "s"}
+          </p>
+        )}
       </div>
 
       {/* Tabs */}
@@ -330,16 +539,83 @@ export function SRSWorkspace({ projectId, srs, versionId }: SRSWorkspaceProps) {
         </TabsContent>
 
         <TabsContent value="sources" className="flex-1 overflow-hidden">
-          <div className="p-4 text-center text-muted-foreground">
-            <Search className="h-12 w-12 mx-auto mb-4 text-muted-foreground/50" />
-            <p>Source browsing coming soon</p>
-            <p className="text-sm mt-2">Click on source citations in requirements to view details</p>
+          <div className="h-full flex flex-col">
+            {sourcesLoading && (
+              <div className="flex items-center justify-center h-full">
+                <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent" />
+              </div>
+            )}
+            {sourcesError && (
+              <div className="p-4 text-center text-red-500">{sourcesError}</div>
+            )}
+            <ScrollArea className="flex-1 p-4 space-y-4">
+              {!sourcesLoading && !sourcesError && sources.length === 0 && (
+                <div className="rounded-xl border border-border bg-muted/30 p-6 text-center text-sm text-muted-foreground">
+                  This version has no cited RAG source chunks.
+                </div>
+              )}
+              {sources.map((source) => (
+                <article
+                  key={source.chunk_id}
+                  className="bg-card border border-border rounded-xl overflow-hidden hover:border-primary/50 transition-colors"
+                >
+                  <div className="p-4 border-b border-border flex items-start justify-between">
+                    <div className="flex items-center gap-3">
+                      <Badge variant="secondary">{source.metadata.source_id}</Badge>
+                      <span className="font-medium">{source.metadata.document_title || "Untitled Source"}</span>
+                    </div>
+                    <a
+                      href={source.metadata.source_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-muted-foreground hover:text-primary transition-colors flex-shrink-0"
+                      aria-label="Open original source"
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                    </a>
+                  </div>
+                  <div className="p-4">
+                    <p className="text-sm text-muted-foreground whitespace-pre-wrap">{source.text}</p>
+                    {source.metadata.categories && (
+                      <div className="mt-3 flex flex-wrap gap-1.5">
+                        {source.metadata.categories.split(",").filter(Boolean).map((cat) => (
+                          <Badge key={cat} variant="secondary" size="sm">{cat.trim()}</Badge>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </article>
+              ))}
+            </ScrollArea>
           </div>
         </TabsContent>
       </Tabs>
-    </div>
-  );
-}
+        {/* PDF Preview Modal */}
+        {previewPdf && (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+            onClick={closePreview}
+          >
+            <div className="relative w-full h-full max-w-4xl max-h-[90vh] bg-white rounded-xl overflow-hidden m-4" onClick={(e) => e.stopPropagation()}>
+              <div className="flex items-center justify-between p-4 border-b border-border">
+                <h2 className="text-lg font-semibold">PDF Preview</h2>
+                <Button variant="ghost" size="sm" onClick={closePreview}>
+                  <Eye className="h-4 w-4" />
+                </Button>
+              </div>
+              <div className="flex-1 overflow-hidden p-4">
+                <iframe
+                  src={previewPdf}
+                  className="w-full h-full border-none rounded-lg"
+                  title="SRS PDF Preview"
+                />
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
 
 function RequirementList({
   requirements,

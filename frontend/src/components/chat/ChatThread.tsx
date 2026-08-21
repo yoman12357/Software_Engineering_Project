@@ -3,59 +3,70 @@
 import { useRef, useEffect } from "react";
 import { UserMessage } from "./UserMessage";
 import { AssistantMessage } from "./AssistantMessage";
-import { ScrollArea } from "../../components/ui/ScrollArea";
+import type { ChatMessage } from "../../api/types";
+import { SkeletonLoader } from "../../components/ui/Skeleton";
 
 interface ChatThreadProps {
-  messages: Array<{
-    id: string;
-    role: "user" | "assistant";
-    content: string;
-    type?: string;
-    metadata?: Record<string, unknown>;
-    timestamp: Date;
-  }>;
+  messages: ChatMessage[];
+  isLoading?: boolean;
   onSubmitClarifications?: (answers: Array<{ question_id: string; answer_text: string; skipped: boolean }>) => void | Promise<void>;
   onOpenSRS?: () => void;
+  onRegenerateMessage?: (messageId: string) => void;
+  onEditMessage?: (messageId: string) => void;
+  onDeleteMessage?: (messageId: string) => void;
 }
 
-export function ChatThread({ messages, onSubmitClarifications, onOpenSRS }: ChatThreadProps) {
+export function ChatThread({ messages, isLoading, onSubmitClarifications, onOpenSRS, onRegenerateMessage, onEditMessage, onDeleteMessage }: ChatThreadProps) {
   const endRef = useRef<HTMLDivElement>(null);
+  const visibleMessages = messages.filter((message, index) => {
+    const previous = messages[index - 1];
+    return !(
+      message.type === "error" &&
+      previous?.type === "error" &&
+      previous.content === message.content
+    );
+  });
 
   useEffect(() => {
     endRef.current?.scrollIntoView?.({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages, isLoading]);
 
-  if (messages.length === 0) {
-    return (
-      <div className="flex-1 flex items-center justify-center px-4">
-        <div className="text-center text-muted-foreground">
-          <p className="text-lg font-medium">Start a conversation</p>
-          <p className="text-sm mt-1">Describe your cybersecurity project to begin</p>
-        </div>
-      </div>
-    );
-  }
+  if (messages.length === 0 && !isLoading) return null;
 
   return (
-    <ScrollArea className="flex-1 min-h-0 pr-2">
-      <div className="flex flex-col gap-4 pb-4" role="log" aria-live="polite" aria-label="Conversation">
-        {messages.map((message) =>
-          message.role === "user" ? (
-            <UserMessage key={message.id} content={message.content} timestamp={message.timestamp} />
-          ) : (
-            <AssistantMessage
-              key={message.id}
-              content={message.content}
-              type={message.type}
-              metadata={message.metadata}
-              timestamp={message.timestamp}
-              onSubmitClarifications={onSubmitClarifications}
-              onOpenSRS={onOpenSRS}
-            />
-          )
-        )}
+    <div className="h-full min-h-0 flex-1 overflow-y-auto overscroll-contain">
+      <div className="max-w-[768px] mx-auto py-6 px-4">
+        <div className="space-y-6">
+          {visibleMessages.map((message) => (
+            <div key={message.id} className="group">
+              {message.role === "user" ? (
+                <UserMessage
+                  content={message.content}
+                  onEdit={onEditMessage ? () => onEditMessage(message.id) : undefined}
+                  onDelete={onDeleteMessage ? () => onDeleteMessage(message.id) : undefined}
+                />
+              ) : (
+                <AssistantMessage
+                  content={message.content}
+                  type={message.type}
+                  metadata={message.metadata as Record<string, unknown> | undefined}
+                  timestamp={message.timestamp}
+                  onSubmitClarifications={onSubmitClarifications}
+                  onOpenSRS={onOpenSRS}
+                  onRegenerate={onRegenerateMessage ? () => onRegenerateMessage(message.id) : undefined}
+                  onEdit={onEditMessage ? () => onEditMessage(message.id) : undefined}
+                  onDelete={onDeleteMessage ? () => onDeleteMessage(message.id) : undefined}
+                  messageId={message.id}
+                />
+              )}
+            </div>
+          ))}
+        </div>
+        {isLoading && <SkeletonLoader count={2} />}
         <div ref={endRef} />
       </div>
-    </ScrollArea>
+    </div>
   );
 }
+
+export default ChatThread;

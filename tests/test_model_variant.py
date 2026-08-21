@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import pytest
+from fastapi.testclient import TestClient
 
 from src.core.config import Settings
 from src.llm.registry import (
@@ -12,6 +13,7 @@ from src.llm.registry import (
     resolve_model_config,
     resolve_model_name,
 )
+from src.main import create_app
 
 
 class TestModelVariant:
@@ -135,3 +137,27 @@ class TestSettingsDefaults:
     def test_finetuned_model_name_field(self) -> None:
         settings = Settings(_env_file=None)
         assert settings.finetuned_model_name == "cybersrs-qwen3-4b-ft"
+
+
+class TestTaskAwareProviderRouting:
+    """General and requirements-engineering tasks use explicit provider slots."""
+
+    def test_base_variant_shares_one_provider(self) -> None:
+        settings = Settings(
+            _env_file=None,
+            database_url="sqlite:///:memory:",
+            llm_provider="mock",
+            model_variant="base",
+        )
+        with TestClient(create_app(settings)) as client:
+            assert client.app.state.general_llm_provider is client.app.state.srs_llm_provider
+
+    def test_finetuned_variant_keeps_general_provider_separate(self) -> None:
+        settings = Settings(
+            _env_file=None,
+            database_url="sqlite:///:memory:",
+            llm_provider="mock",
+            model_variant="finetuned",
+        )
+        with TestClient(create_app(settings)) as client:
+            assert client.app.state.general_llm_provider is not client.app.state.srs_llm_provider

@@ -43,6 +43,7 @@ from ..schemas.clarification import (
     generate_question_id,
 )
 from ..schemas.project import generate_uuid
+from .clarification_defaults import MANDATORY_REVIEW_GAPS
 from .provenance_service import ModelRunRecorder
 
 QUESTIONABLE_STATES: frozenset[str] = frozenset({"analysed", "clarifying"})
@@ -89,16 +90,7 @@ class ClarificationService:
         if context is None:
             raise ProjectContextNotFoundError()
 
-        missing = context.missing_information or []
-        if not missing:
-            # Nothing to clarify; return an empty question list.
-            return ClarificationQuestionListResponse(
-                project_id=project_id,
-                questions=[
-                    ClarificationQuestionRead.model_validate(q)
-                    for q in self._list_questions(project_id)
-                ],
-            )
+        missing = context.missing_information or list(MANDATORY_REVIEW_GAPS)
 
         # Build context summary for the prompt
         project_summary = (

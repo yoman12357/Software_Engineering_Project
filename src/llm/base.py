@@ -70,6 +70,7 @@ class LLMTask(StrEnum):
     ANALYSIS = "analysis"
     CLARIFICATION = "clarification"
     SRS = "srs"
+    CHAT = "chat"
 
 
 class LLMOutputError(ValueError):

@@ -14,6 +14,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
 from ..core.exceptions import ApiError
+from ..llm.base import LLMOutputError, LLMTimeoutError
 
 logger = logging.getLogger(__name__)
 
@@ -29,6 +30,44 @@ def register_error_handlers(app: FastAPI) -> None:
     """Attach the application's error handlers to the FastAPI app."""
     register_exception_handler(app)
     register_request_validation_handler(app)
+    register_llm_handlers(app)
+
+
+def register_llm_handlers(app: FastAPI) -> None:
+    """Handle LLM provider failures surfaced to the client.
+
+    Ollama connection failures and output-validation failures are translated
+    into structured error envelopes with actionable messages instead of the
+    generic 500 "unexpected error" response.
+    """
+
+    @app.exception_handler(LLMTimeoutError)
+    async def handle_llm_timeout(_request: Request, exc: LLMTimeoutError) -> JSONResponse:
+        logger.warning("LLM timeout during request: %s", exc)
+        return JSONResponse(
+            status_code=status.HTTP_504_GATEWAY_TIMEOUT,
+            content=error_response(
+                code="llm_timeout",
+                message=(
+                    "The model took too long to respond. "
+                    "Check that Ollama is running and try again."
+                ),
+            ),
+        )
+
+    @app.exception_handler(LLMOutputError)
+    async def handle_llm_output(_request: Request, exc: LLMOutputError) -> JSONResponse:
+        logger.warning("LLM output error during request: %s", exc)
+        return JSONResponse(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            content=error_response(
+                code="llm_output_error",
+                message=(
+                    "The model produced an invalid response. "
+                    "The provider may be misconfigured."
+                ),
+            ),
+        )
 
 
 def register_exception_handler(app: FastAPI) -> None:

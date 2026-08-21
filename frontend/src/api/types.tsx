@@ -16,6 +16,19 @@ export interface ProjectCreatePayload {
   description: string;
 }
 
+export interface ProjectDocumentRead {
+  id: string;
+  project_id: string;
+  original_filename: string;
+  media_type: string;
+  file_extension: string;
+  file_size_bytes: number;
+  sha256: string;
+  status: string;
+  chunk_count: number;
+  created_at: string;
+}
+
 export interface ProjectAnalysis {
   stakeholders: string[];
   assets: string[];
@@ -240,6 +253,52 @@ export interface SRSVersionRead {
   srs: SRSSchema | null;
 }
 
+export interface SourceChunk {
+  chunk_id: string;
+  text: string;
+  metadata: {
+    source_id: string;
+    document_title: string;
+    organisation: string;
+    version: string;
+    publication_date: string;
+    retrieval_date: string;
+    source_url: string;
+    section_heading: string;
+    section_level: number;
+    page_number: number;
+    chunk_index: number;
+    file_hash_sha256: string;
+    categories: string;
+    licence_note: string;
+  };
+}
+
+export interface SRSSourcesResponse {
+  sources: SourceChunk[];
+}
+
+export interface SRSVersionSummary {
+  id: string;
+  version_number: number;
+  quality_score: number | null;
+  status: string;
+  created_at: string;
+}
+
+export interface SRSVersionListResponse {
+  project_id: string;
+  versions: SRSVersionSummary[];
+}
+
+export interface SRSGenerationProgressEvent {
+  phase: "preparing" | "retrieving" | "generating" | "validating" | "completed" | "failed";
+  progress: number;
+  message: string;
+  result: SRSGenerationResponse | null;
+  error_code?: string | null;
+}
+
 export interface ModelRunProvenance {
   id: string;
   operation_type: string;
@@ -267,6 +326,21 @@ export interface ArtifactProvenanceResponse {
   model_run: ModelRunProvenance | null;
 }
 
+export interface HealthResponse {
+  status: "ok" | "degraded";
+  service: string;
+  database_ok: boolean;
+}
+
+export interface ModelInfoResponse {
+  active_model_variant: string;
+  active_model_name: string;
+  provider: string;
+  rag_enabled: boolean;
+  embedding_model: string | null;
+  knowledge_base_version: string;
+}
+
 export interface SRSEditSection {
   section: string;
   requirement_id: string;
@@ -290,6 +364,69 @@ export interface SRSValidationResponse {
   srs_version_id: string;
   overall_score: number;
   issues: ValidationIssue[];
+}
+
+export interface ChatMessage {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+  type?: "text" | "analysis" | "clarification" | "generation" | "srs" | "error";
+  metadata?: Record<string, unknown>;
+  timestamp: string;
+}
+
+export type SRSRegeneratableSection =
+  | "functional_requirements"
+  | "non_functional_requirements"
+  | "security_requirements"
+  | "data_requirements"
+  | "network_requirements"
+  | "architecture_summary"
+  | "threats"
+  | "testing_strategy";
+
+export interface ChatSessionSnapshot {
+  id: string;
+  project_id: string | null;
+  name: string;
+  messages: ChatMessage[];
+  stage: "welcome" | "analyzing" | "clarifying" | "generating" | "ready" | "error";
+  analysis: Record<string, unknown> | null;
+  clarification_questions: unknown[] | null;
+  srs: unknown | null;
+  srs_version_id: string | null;
+  pending_project_description: string | null;
+  pinned_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export type ChatSessionWrite = Omit<
+  ChatSessionSnapshot,
+  "id" | "pinned_at" | "created_at" | "updated_at"
+>;
+
+export interface ChatSessionListResponse {
+  sessions: ChatSessionSnapshot[];
+  total: number;
+}
+
+export interface ChatCitation {
+  source_id: string;
+  source_document_id: string;
+  document_title: string;
+  chunk_index: number;
+  page_or_section: string | null;
+  relevance_score: number;
+}
+
+export interface ChatCompletionResponse {
+  content: string;
+  is_project_description: boolean;
+  model_name: string;
+  rag_enabled: boolean;
+  citations: ChatCitation[];
+  warnings: string[];
 }
 
 export interface ApiErrorEnvelope {

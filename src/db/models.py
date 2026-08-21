@@ -90,6 +90,83 @@ class Project(Base):
     model_runs: Mapped[list[ModelRun]] = relationship(
         back_populates="project", cascade="all, delete-orphan"
     )
+    documents: Mapped[list[ProjectDocument]] = relationship(
+        back_populates="project", cascade="all, delete-orphan"
+    )
+    chat_sessions: Mapped[list[ChatSession]] = relationship(
+        back_populates="project", cascade="all, delete-orphan"
+    )
+
+
+class ChatSession(Base):
+    """A locally persisted, resumable conversational workflow."""
+
+    __tablename__ = "chat_session"
+
+    id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    project_id: Mapped[str | None] = mapped_column(
+        ForeignKey("project.id", ondelete="CASCADE"), nullable=True, index=True
+    )
+    name: Mapped[str] = mapped_column(String(200), nullable=False, default="New chat")
+    stage: Mapped[str] = mapped_column(String(20), nullable=False, default="welcome")
+    analysis_json: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    clarification_questions_json: Mapped[list | None] = mapped_column(JSON, nullable=True)
+    srs_json: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    srs_version_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    pending_project_description: Mapped[str | None] = mapped_column(Text, nullable=True)
+    pinned_at: Mapped[datetime | None] = mapped_column(UTCDateTime(), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(UTCDateTime(), nullable=False, default=utcnow)
+    updated_at: Mapped[datetime] = mapped_column(
+        UTCDateTime(), nullable=False, default=utcnow, onupdate=utcnow
+    )
+
+    project: Mapped[Project | None] = relationship(back_populates="chat_sessions")
+    messages: Mapped[list[ChatMessageRecord]] = relationship(
+        back_populates="session",
+        cascade="all, delete-orphan",
+        order_by="ChatMessageRecord.timestamp",
+    )
+
+
+class ChatMessageRecord(Base):
+    """One ordered message belonging to a persisted chat session."""
+
+    __tablename__ = "chat_message"
+
+    id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    session_id: Mapped[str] = mapped_column(
+        ForeignKey("chat_session.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    role: Mapped[str] = mapped_column(String(20), nullable=False)
+    content: Mapped[str] = mapped_column(Text, nullable=False)
+    message_type: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    metadata_json: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    timestamp: Mapped[datetime] = mapped_column(UTCDateTime(), nullable=False, default=utcnow)
+
+    session: Mapped[ChatSession] = relationship(back_populates="messages")
+
+
+class ProjectDocument(Base):
+    """A locally stored reference document scoped to one project."""
+
+    __tablename__ = "project_document"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    project_id: Mapped[str] = mapped_column(
+        ForeignKey("project.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+    original_filename: Mapped[str] = mapped_column(String(255), nullable=False)
+    stored_path: Mapped[str] = mapped_column(Text, nullable=False)
+    media_type: Mapped[str] = mapped_column(String(100), nullable=False)
+    file_extension: Mapped[str] = mapped_column(String(20), nullable=False)
+    file_size_bytes: Mapped[int] = mapped_column(Integer, nullable=False)
+    sha256: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    status: Mapped[str] = mapped_column(String(20), nullable=False, default="ready")
+    extracted_text: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    chunk_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    created_at: Mapped[datetime] = mapped_column(UTCDateTime(), nullable=False, default=utcnow)
+
+    project: Mapped[Project] = relationship(back_populates="documents")
 
 
 class ProjectDescription(Base):

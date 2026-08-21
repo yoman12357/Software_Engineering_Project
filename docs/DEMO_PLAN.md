@@ -1,8 +1,8 @@
 # Demonstration Plan — CyberSRS
 
-**Version:** 0.1.0-draft
-**Date:** 2026-08-07
-**Status:** Phase 0 — Planning
+**Version:** 0.1.0
+**Date:** 2026-08-21
+**Status:** Executable MVP demonstration
 
 ---
 
@@ -110,7 +110,7 @@ Before the demo, generate and save:
 - Pre-generated SRS JSON files stored in `./data/demo/`.
 - Pre-generated PDFs stored in `./data/demo/exports/`.
 - Screenshots stored in `./data/demo/screenshots/`.
-- A mock API mode that serves pre-generated responses (`CYBERSRS_DEMO_MODE=true`).
+- The deterministic built-in provider selected with `CYBERSRS_LLM_PROVIDER=mock`.
 
 ---
 

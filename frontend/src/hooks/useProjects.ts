@@ -1,39 +1,37 @@
-import { useCallback } from "react";
 import { useProjectStore } from "../stores/projectStore";
-import type { Project } from "../stores/projectStore";
 
 export function useProjects() {
   const {
     projects,
+    chatSessions,
     currentProjectId,
+    currentSessionId,
     isLoading,
     error,
     fetchProjects,
+    fetchChatSessions,
     createProject,
     setCurrentProject,
+    setCurrentSession,
     deleteProject,
-    updateProject,
+    deleteChatSession,
+    setChatSessionPinned,
   } = useProjectStore();
-
-  const getCurrentProject = useCallback((): Project | undefined => {
-    return projects.find((p) => p.id === currentProjectId);
-  }, [projects, currentProjectId]);
-
-  const getProjectById = useCallback((id: string): Project | undefined => {
-    return projects.find((p) => p.id === id);
-  }, [projects]);
 
   return {
     projects,
+    chatSessions,
     currentProjectId,
-    currentProject: getCurrentProject(),
+    currentSessionId,
     isLoading,
     error,
     fetchProjects,
+    fetchChatSessions,
     createProject,
     setCurrentProject,
+    setCurrentSession,
     deleteProject,
-    updateProject,
-    getProjectById,
+    deleteChatSession,
+    setChatSessionPinned,
   };
 }

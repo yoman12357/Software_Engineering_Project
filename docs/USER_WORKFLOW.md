@@ -1,8 +1,8 @@
 # User Workflow — CyberSRS
 
-**Version:** 0.1.0-draft
-**Date:** 2026-08-07
-**Status:** Phase 0 — Planning
+**Version:** 0.1.0
+**Date:** 2026-08-21
+**Status:** Implemented MVP workflow
 
 ---
 
@@ -38,11 +38,11 @@ flowchart TD
 
 ### Step 1 — Create a Project
 
-The user opens CyberSRS and creates a new project by entering a project name.
+The user opens CyberSRS and starts a new chat. A project is created automatically when the first detailed project/SRS request is submitted; ordinary questions remain general chat.
 
-- **Input:** Project name (free text).
-- **Output:** A new project record is created in the database.
-- **UI state:** Project-creation form.
+- **Input:** A chat message, optionally with project reference files.
+- **Output:** A persistent chat session, and a project record when the intent requires one.
+- **UI state:** Welcome composer with suggested prompts and local file attachment.
 
 ### Step 2 — Enter an Informal Description
 
@@ -51,7 +51,7 @@ The user writes a plain-English description of the cybersecurity system they wan
 - **Input:** Informal description (free text, at least one sentence).
 - **Example:** *"I want to build a firewall and network-monitoring system for a college campus."*
 - **Output:** Description is saved to the project record.
-- **UI state:** Description-entry form with a text area and a "Submit" button.
+- **UI state:** Chat composer with Enter-to-send and attachment controls.
 - **Constraint:** The user is **never** asked to select a domain, category, or template.
 
 ### Step 3 — Analyse the Description
@@ -114,7 +114,7 @@ The system generates all SRS sections using the main LLM with the project contex
 
 - **Processing:** The LLM generates each SRS section as validated JSON. Sections include: functional requirements, non-functional requirements, cybersecurity requirements, high-level architecture, threat model, acceptance criteria, and testing recommendations.
 - **Output:** A complete `SRSVersion` object stored in the database.
-- **UI state:** Progress indicator with section-level progress ("Generating functional requirements…").
+- **UI state:** Validated progress events for preparation, retrieval, generation, validation, and completion. The user may cancel delivery and retry.
 
 ### Step 11 — Validate Requirements
 
@@ -139,8 +139,8 @@ The system displays the complete SRS in a structured, navigable view.
 
 The user reviews the SRS and may:
 
-- **Edit** any requirement or section text directly.
-- **Regenerate** a specific section (the system re-runs generation for that section only, preserving all other sections).
+- **Edit** requirement text directly; the saved result is validated and reloaded.
+- **Regenerate** a specific section into a new version, preserving the source version and all non-target sections.
 
 After editing or regeneration, the system re-validates (Step 11) and re-displays (Step 12).
 

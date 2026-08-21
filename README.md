@@ -1,215 +1,178 @@
 # CyberSRS
 
-**AI-Assisted Software Requirements Specification Platform for Cybersecurity Projects**
+CyberSRS is a local-first AI chat and Software Requirements Specification (SRS) workspace for cybersecurity and network-infrastructure projects. It uses one provider-independent Qwen model interface for ordinary chat and SRS work, with local ChromaDB retrieval when project or domain context is relevant.
 
-> **Project status:** Phase 2A complete — real local Qwen integration via Ollama.
-> The backend (FastAPI) and frontend (React/TypeScript/Vite) run together with either a deterministic mock LLM provider or the real Qwen model via Ollama behind the existing `LLMProvider` abstraction.
+## Current capabilities
 
----
+- General-purpose local chat, including explanations, coding questions, and calculations.
+- Intent-aware SRS workflow: project analysis, targeted clarification questions, answer collection, RAG retrieval, validated JSON generation, and deterministic validation.
+- Project reference uploads for PDF, Markdown, text, and CSV files.
+- Persistent chat history backed by SQLite, including search, rename, pin, delete, and exact session restoration.
+- Streaming generation progress with UI cancellation and retry. Cancellation stops client delivery; a synchronous provider call already running on the backend may finish in the background.
+- SRS version history, inline requirement editing, deterministic validation, and single-section regeneration into a new version.
+- Requirement citations and model-run provenance.
+- PDF preview/download plus Markdown and JSON export.
+- Local runtime status in Settings for the backend, configured model, RAG, embedding model, and knowledge-base version.
 
-## Problem Being Solved
+All LLM-generated application artefacts are parsed and validated before they are displayed or persisted. SQLite and ChromaDB data remain local.
 
-Writing a Software Requirements Specification (SRS) for cybersecurity and network-infrastructure projects is time-consuming and error-prone. Requirements engineers must simultaneously understand the customer's informal intent, apply cybersecurity domain knowledge, follow standards, generate threat models, and ensure traceability — all tasks that benefit from AI assistance but currently lack an integrated, locally deployable tool.
+## Architecture
 
-CyberSRS addresses this by providing a single platform where a user supplies only an **informal project description** and receives a complete, structured, traceable SRS — including functional requirements, non-functional requirements, cybersecurity requirements, a threat model, acceptance criteria, and a downloadable PDF — without ever manually selecting a project domain.
+| Layer | Technology |
+| --- | --- |
+| Frontend | React 18, TypeScript, Vite, Zustand |
+| Backend | Python 3.11+, FastAPI |
+| Main LLM | Qwen/Qwen3-4B-Instruct-2507 through an `LLMProvider` interface |
+| Local serving | Ollama |
+| Database | SQLite |
+| Retrieval | ChromaDB with local Ollama embeddings |
+| Canonical SRS format | Validated structured JSON |
+| Documents | Deterministic JSON-to-PDF/Markdown/JSON export |
 
-## Target Users
+QLoRA/fine-tuned model support is configuration-ready through `CYBERSRS_MODEL_VARIANT` and the fine-tuned model name. Training and selecting a production adapter remain separate evaluation/deployment tasks.
 
-| User                                             | Need                                                                                 |
-| ------------------------------------------------ | ------------------------------------------------------------------------------------ |
-| Software-engineering students                    | Generate high-quality SRS documents for academic cybersecurity projects              |
-| Requirements engineers (individual contributors) | Accelerate the early phases of requirements engineering for security-focused systems |
-| Small-team security practitioners                | Produce structured documentation for firewalls, IDS, IAM, VPN, and related systems   |
+## Quick start
 
-## Main Capabilities
+### 1. Install dependencies
 
-1. **Natural-language analysis** — Accepts a plain-English project description and automatically infers the cybersecurity subdomain.
-2. **Missing-information detection** — Identifies gaps and asks targeted clarification questions.
-3. **RAG-augmented generation** — Planned for Phase 4; retrieves relevant cybersecurity knowledge to ground requirements in domain standards.
-4. **Structured SRS generation** — Produces functional, non-functional, security, data, and network requirements in a validated JSON structure before rendering.
-5. **Threat modelling** — Generates a threat model aligned to the inferred project context.
-6. **Requirement validation** — Deterministic checks (duplicate IDs, empty statements, missing acceptance criteria, invalid priorities) with a quality score.
-7. **Review and editing** — Lets the user review and edit individual requirements inline; saves through the backend.
-8. **PDF export** — Planned for Phase 6; produces a professional SRS document from the validated structure.
-9. **Fine-tuned behaviour** — Planned for Phase 8; QLoRA fine-tuning of the main model to improve requirements-engineering output quality over time.
-
-## High-Level User Flow
-
-```
-┌──────────────────────────────────────────────────────────┐
-│  1. Create a new project                                 │
-│  2. Enter an informal project description                │
-│  3. System analyses the description and infers domain    │
-│  4. System identifies missing information                │
-│  5. System asks clarification questions                  │
-│  6. User answers clarifications                          │
-│  7. System retrieves relevant cybersecurity knowledge    │
-│     (Phase 4+; mock SRS is deterministic in Phase 1)     │
-│  8. System generates structured SRS (JSON)               │
-│  9. System validates requirements                        │
-│ 10. User reviews, edits, and regenerates sections        │
-│ 11. User approves the document                           │
-│ 12. System exports a PDF (Phase 6+)                      │
-└──────────────────────────────────────────────────────────┘
-```
-
-## Approved Technology Stack
-
-| Layer               | Technology                                               |
-| ------------------- | -------------------------------------------------------- |
-| Main LLM            | Qwen/Qwen3-4B-Instruct-2507 (Phase 2; mock in Phase 1)   |
-| Fine-tuning         | QLoRA via Hugging Face Transformers, PEFT, TRL (Phase 8) |
-| Backend             | Python 3.11+, FastAPI                                    |
-| Frontend            | React 18, TypeScript, Vite                               |
-| Database            | SQLite (MVP)                                             |
-| Vector database     | ChromaDB (Phase 4)                                       |
-| Local model serving | Ollama behind a provider-independent interface (Phase 2) |
-| Document generation | Structured JSON → template-based PDF (Phase 6)           |
-| Embedding model     | To be decided (retrieval utility only; Phase 4)          |
-
-## Repository Documentation Map
-
-Read these documents **in the order listed** to understand the project before contributing.
-
-| Document                                                     | Purpose                                            |
-| ------------------------------------------------------------ | -------------------------------------------------- |
-| [AGENTS.md](AGENTS.md)                                       | Rules and constraints for all coding agents        |
-| [docs/PRD.md](docs/PRD.md)                                   | Product Requirements Document                      |
-| [docs/SCOPE.md](docs/SCOPE.md)                               | MVP scope, post-MVP scope, and explicit exclusions |
-| [docs/USER_WORKFLOW.md](docs/USER_WORKFLOW.md)               | End-to-end user workflow with error paths          |
-| [docs/REQUIREMENTS_CATALOG.md](docs/REQUIREMENTS_CATALOG.md) | Traceable master catalogue of all requirements     |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)                 | System architecture, diagrams, and data flow       |
-| [docs/DATA_MODEL.md](docs/DATA_MODEL.md)                     | Conceptual data model and SRS JSON schema          |
-| [docs/API_CONTRACT.md](docs/API_CONTRACT.md)                 | Planned API endpoints and schemas                  |
-| [docs/ROADMAP.md](docs/ROADMAP.md)                           | Phased development plan with completion gates      |
-| [docs/DECISIONS.md](docs/DECISIONS.md)                       | Approved and unresolved decisions                  |
-| [docs/GLOSSARY.md](docs/GLOSSARY.md)                         | Terminology reference                              |
-| [docs/adr/](docs/adr/)                                       | Architecture Decision Records                      |
-
-## Current Project Status
-
-- [x] Phase 0 — Planning and repository governance
-- [x] Phase 1 — Non-AI application skeleton + deterministic mock AI pipeline + structured mock SRS + React frontend (complete)
-- [x] Phase 2A — Base-model integration (Qwen via Ollama)
-- [ ] Phase 3 — Structured SRS generation with the real model
-- [ ] Phase 4 — RAG ingestion and retrieval
-- [ ] Phase 5 — Security and requirement validation (LLM-assisted)
-- [ ] Phase 6 — PDF generation and editing workflow
-- [ ] Phase 7 — Dataset preparation
-- [ ] Phase 8 — QLoRA fine-tuning
-- [ ] Phase 9 — Comparative evaluation
-- [ ] Phase 10 — Testing, documentation, and demonstration
-
-## Getting Started
-
-### Prerequisites
-
-- Python 3.11 or newer
-- Node.js 18 or newer (tested with Node 24)
-- [Ollama](https://ollama.com) with the Qwen model (required for real model mode):
-  ```bash
-  ollama pull qwen3:4b-instruct-2507-q4_K_M
-  ```
-
-### Backend
-
-```bash
+```powershell
 python -m pip install -e ".[dev]"
-copy .env.example .env   # optional; sensible defaults exist
-python -m uvicorn src.main:app --host 127.0.0.1 --port 8000
-```
+Copy-Item .env.example .env
 
-- Interactive API documentation (Swagger UI): http://127.0.0.1:8000/docs
-- OpenAPI JSON: http://127.0.0.1:8000/openapi.json
-- Health check: http://127.0.0.1:8000/api/v1/health
-
-### Frontend
-
-```bash
-cd frontend
+Set-Location frontend
 npm install
-npm run dev
+Set-Location ..
 ```
 
-The Vite dev server runs at http://localhost:5173 and proxies `/api` to the backend at `http://127.0.0.1:8000`.
+### 2. Configure the local model
 
-### Run the tests
+For deterministic development without Ollama, keep:
 
-```bash
-# Backend
-python -m pytest                       # 119 tests, isolated in-memory SQLite
-python -m ruff format .                # formatter
-python -m ruff check .                 # linter
-python -m mypy src                     # type checking
-
-# Frontend
-cd frontend
-npm test                               # 11 Vitest tests
-npm run typecheck                      # TypeScript
-npm run lint                           # ESLint
-npm run build                          # production build
-```
-
-## LLM Provider Selection
-
-CyberSRS supports two LLM providers selected via the `CYBERSRS_LLM_PROVIDER` environment variable:
-
-### Mock Provider (default, no Ollama required)
-
-```bash
+```text
 CYBERSRS_LLM_PROVIDER=mock
 ```
 
-- Deterministic, fast, requires no external dependencies
-- Used for development, CI, and testing
-- Returns curated responses for known demo projects; hash-based fallback for others
+For the real local model, set these values in `.env`:
 
-### Real Ollama Provider (Phase 2A+)
-
-```bash
+```text
 CYBERSRS_LLM_PROVIDER=ollama
-CYBERSRS_OLLAMA_BASE_URL=http://127.0.0.1:11434
-CYBERSRS_MODEL_NAME=qwen3:4b-instruct-2507-q4_K_M
+CYBERSRS_MODEL_VARIANT=base
+CYBERSRS_BASE_MODEL_NAME=qwen3:4b-instruct-2507-q4_K_M
+CYBERSRS_OLLAMA_BASE_URL=http://localhost:11434
 ```
 
-**Required:** Ollama must be running locally with the Qwen model installed:
-```bash
+Install and start the configured Ollama models:
+
+```powershell
 ollama pull qwen3:4b-instruct-2507-q4_K_M
+ollama pull nomic-embed-text
 ollama serve
 ```
 
-The real provider:
-- Calls the local Ollama API only (no cloud dependencies)
-- Implements bounded retries with exponential backoff (configurable via `CYBERSRS_LLM_MAX_RETRIES`, default 3)
-- Handles timeouts (`CYBERSRS_LLM_TIMEOUT_SECONDS`, default 120s)
-- Returns structured JSON validated against Pydantic schemas
-- Logs generation metadata (latency, model name) without user content (SEC-031)
+If Ollama is already running as a Windows service, `ollama serve` is not needed.
 
-### Switching Providers
+### 3. Start Ollama, the backend, and the frontend
 
-Simply change the `CYBERSRS_LLM_PROVIDER` value in your `.env` file and restart the backend. The application layer depends only on the `LLMProvider` abstraction — no code changes required.
+From the repository root, the combined Windows launcher starts only the services
+that are not already running:
 
-## Phase 1 Implementation Summary
+```powershell
+.\dev.cmd
+```
 
-- **Phase 1A** — FastAPI backend foundation, SQLite schema (all DATA_MODEL entities), project CRUD, health endpoint, config from `.env`, safe error envelope, body-size limit.
-- **Phase 1B** — Mock AI pipeline: `LLMProvider` abstraction, deterministic `MockLLMProvider`, description analysis, subdomain inference, missing-information detection, clarification questions/answers, `ProjectContext` persistence, project-state progression.
-- **Phase 1C** — Structured mock SRS: complete SRS Pydantic schema, deterministic SRS generation, SRS versioning/persistence, deterministic validation (duplicate IDs, missing acceptance criteria, etc.), SRS editing.
-- **Phase 1D** — React frontend: typed centralized API client, full create → analyse → clarify → generate → edit/save workflow, loading/error/empty states, 11 Vitest tests.
+It writes development logs under `data/dev-runtime/logs`. To stop only the
+processes that this launcher started:
 
-## Phase 2A Implementation Summary
+```powershell
+.\dev.cmd -Stop
+```
 
-- **OllamaQwenProvider** — Async provider implementing the `LLMProvider` interface
-- **SyncOllamaQwenProvider** — Synchronous wrapper for backward compatibility
-- **Prompt templates** — Organised in `src/prompts/` for analysis, clarification, and sectioned SRS generation
-- **Configuration** — `CYBERSRS_OLLAMA_BASE_URL`, `CYBERSRS_MODEL_NAME`, `CYBERSRS_LLM_TIMEOUT_SECONDS`, `CYBERSRS_LLM_MAX_RETRIES`
-- **Error handling** — Connection failures, timeouts, model-not-found, HTTP errors, malformed JSON, empty responses
-- **Retry logic** — Exponential backoff (1s, 2s, 4s...) up to `CYBERSRS_LLM_MAX_RETRIES`
-- **Tests** — 13 new unit tests with mocked HTTP (no real Ollama required for CI)
+Alternatively, start the applications separately as follows.
 
-The locally installed Qwen (`qwen3:4b-instruct-2507-q4_K_M`) and embedding (`nomic-embed-text`) models are configured in `.env.example`. The embedding model is **reserved for Phase 4** (RAG) and is not used in Phase 2A.
+Backend, from the repository root:
 
-## Licence
+```powershell
+python -m uvicorn src.main:app --reload --port 8000
+```
 
-To be decided.
-#   S o f t w a r e - E n g i n e e r i n g - S E M - 5 -  
- 
+Frontend, in another terminal:
+
+```powershell
+Set-Location frontend
+npm run dev
+```
+
+Open `http://localhost:5173`. The Vite development server proxies `/api` to `http://127.0.0.1:8000`.
+
+Useful checks:
+
+- API health: `http://127.0.0.1:8000/api/v1/health`
+- API documentation: `http://127.0.0.1:8000/docs`
+- In the application: **Settings → General** shows backend and configured model/RAG status.
+
+ChromaDB telemetry errors from incompatible PostHog packages do not prevent local retrieval, but no project telemetry is intentionally configured or sent by CyberSRS.
+
+## Using the SRS workflow
+
+Enter a detailed request such as:
+
+> Generate an SRS for a zero-trust VPN gateway for a 500-person company. It needs Azure AD, MFA, device posture checks, application-level access policies, 99.9% availability, and GDPR-aligned audit retention.
+
+CyberSRS analyses the statement and asks clarification questions. Answer all questions in the rendered form, or answer in one message using numbered lines:
+
+```text
+1. Azure AD is the only identity provider.
+2. Support Windows 11 and macOS 15 managed devices.
+3. Retain audit logs for 365 days.
+4. Target 100 concurrent sessions and 99.9% monthly uptime.
+5. Deployment is on-premises with two active nodes.
+```
+
+After submission, generation streams progress into the workspace. Validate, edit, regenerate a selected section, inspect sources, switch versions, or export the result.
+
+## Keyboard shortcuts
+
+| Shortcut | Action |
+| --- | --- |
+| `Ctrl/Cmd+N` | New chat |
+| `Ctrl/Cmd+K` | Open/focus chat search |
+| `Ctrl/Cmd+E` | Export the open SRS as PDF |
+| `Ctrl/Cmd+Shift+R` | Regenerate the active SRS section |
+| `Ctrl/Cmd+B` | Toggle the sidebar |
+| `Escape` | Close the active dialog/workspace state |
+
+## Verification
+
+```powershell
+# Backend
+python -m pytest -q
+
+# Python lint check
+python -m ruff check src tests
+
+# Frontend
+Set-Location frontend
+npm test -- --run
+npm run typecheck
+npm run lint
+npm run build
+```
+
+## Documentation
+
+- [Agent/contributor rules](AGENTS.md)
+- [Product requirements](docs/PRD.md)
+- [Scope](docs/SCOPE.md)
+- [User workflow](docs/USER_WORKFLOW.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [API contract](docs/API_CONTRACT.md)
+- [Requirements catalogue](docs/REQUIREMENTS_CATALOG.md)
+- [Demonstration plan](docs/DEMO_PLAN.md)
+- [Roadmap](docs/ROADMAP.md)
+
+## Troubleshooting
+
+- **“Backend could not be reached”**: start Uvicorn on port 8000 and confirm `/api/v1/health` responds.
+- **Ollama/model error**: run `ollama list`, verify the tag matches `.env`, and restart the backend after changing configuration.
+- **General questions are answered only from RAG**: restart the backend/frontend with the current code; general chat does not require retrieved context, while SRS/domain requests use the SRS workflow and RAG where available.
+- **Uploaded file is ignored**: attach it before submitting the project request. Supported files are PDF, Markdown, text, and CSV, subject to the configured local size/count limits.

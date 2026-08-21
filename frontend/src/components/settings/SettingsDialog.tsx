@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { X, Sun, Moon, Monitor, Shield, Database, Zap, FileText, Settings as SettingsIcon } from "lucide-react";
 import { cn } from "../../lib/utils";
@@ -9,6 +9,8 @@ import { Badge } from "../../components/ui/Badge";
 import { ScrollArea } from "../../components/ui/ScrollArea";
 import { ThemeToggle } from "../../components/ui/ThemeToggle";
 import { useThemeStore } from "../../stores/themeStore";
+import { api } from "../../api/client";
+import type { HealthResponse, ModelInfoResponse } from "../../api/types";
 
 interface SettingsDialogProps {
   open: boolean;
@@ -17,6 +19,29 @@ interface SettingsDialogProps {
 
 export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
   const [activeTab, setActiveTab] = useState("general");
+  const [health, setHealth] = useState<HealthResponse | null>(null);
+  const [modelInfo, setModelInfo] = useState<ModelInfoResponse | null>(null);
+  const [runtimeLoading, setRuntimeLoading] = useState(false);
+  const [runtimeError, setRuntimeError] = useState<string | null>(null);
+
+  const loadRuntimeStatus = useCallback(async () => {
+    setRuntimeLoading(true);
+    setRuntimeError(null);
+    const [healthResult, modelResult] = await Promise.allSettled([
+      api.getHealth(),
+      api.getModelInfo(),
+    ]);
+    setHealth(healthResult.status === "fulfilled" ? healthResult.value : null);
+    setModelInfo(modelResult.status === "fulfilled" ? modelResult.value : null);
+    if (healthResult.status === "rejected" || modelResult.status === "rejected") {
+      setRuntimeError("Some runtime information could not be loaded. Check that the backend is running.");
+    }
+    setRuntimeLoading(false);
+  }, []);
+
+  useEffect(() => {
+    if (open) void loadRuntimeStatus();
+  }, [loadRuntimeStatus, open]);
 
   if (!open) return null;
 
@@ -65,7 +90,15 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
         {/* Content */}
         <div className="flex-1 overflow-hidden">
           <ScrollArea className="h-full p-4 space-y-6">
-            {activeTab === "general" && <GeneralSettings />}
+            {activeTab === "general" && (
+              <GeneralSettings
+                health={health}
+                modelInfo={modelInfo}
+                loading={runtimeLoading}
+                error={runtimeError}
+                onRetry={loadRuntimeStatus}
+              />
+            )}
             {activeTab === "appearance" && <AppearanceSettings />}
             {activeTab === "about" && <AboutSettings />}
           </ScrollArea>
@@ -81,9 +114,31 @@ export function SettingsDialog({ open, onClose }: SettingsDialogProps) {
   );
 }
 
-function GeneralSettings() {
+function GeneralSettings({
+  health,
+  modelInfo,
+  loading,
+  error,
+  onRetry,
+}: {
+  health: HealthResponse | null;
+  modelInfo: ModelInfoResponse | null;
+  loading: boolean;
+  error: string | null;
+  onRetry: () => Promise<void>;
+}) {
+  const backendReady = health?.status === "ok" && health.database_ok;
+
   return (
     <div className="space-y-6">
+      {error && (
+        <div className="flex items-center gap-3 rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-3 text-sm text-yellow-200" role="alert">
+          <span>{error}</span>
+          <Button className="ml-auto" variant="outline" size="sm" onClick={() => void onRetry()} disabled={loading}>
+            Retry
+          </Button>
+        </div>
+      )}
       <div>
         <h3 className="font-medium mb-3">AI Runtime</h3>
         <div className="p-4 rounded-lg bg-muted/50 border border-border space-y-3">
@@ -93,13 +148,19 @@ function GeneralSettings() {
                 <Zap className="h-5 w-5" />
               </div>
               <div>
-                <p className="font-medium">Ollama (Local)</p>
-                <p className="text-sm text-muted-foreground">Running Qwen3-4B-Instruct</p>
+                <p className="font-medium">{modelInfo?.provider ?? "Local model provider"}</p>
+                <p className="text-sm text-muted-foreground">
+                  {loading
+                    ? "Checking configured model..."
+                    : modelInfo
+                    ? `Configured: ${modelInfo.active_model_name}`
+                    : "Model configuration unavailable"}
+                </p>
               </div>
             </div>
-            <Badge variant="success" className="gap-1">
+            <Badge variant={backendReady ? "success" : "outline"} className="gap-1">
               <Shield className="h-3 w-3" />
-              Local Only
+              {loading ? "Checking" : backendReady ? "Backend ready" : "Backend unavailable"}
             </Badge>
           </div>
           <div className="text-sm text-muted-foreground">
@@ -117,13 +178,17 @@ function GeneralSettings() {
                 <Database className="h-5 w-5" />
               </div>
               <div>
-                <p className="font-medium">ChromaDB Vector Store</p>
-                <p className="text-sm text-muted-foreground">NIST, OWASP, MITRE ATT&CK guidance</p>
+                <p className="font-medium">Local knowledge base</p>
+                <p className="text-sm text-muted-foreground">
+                  {modelInfo
+                    ? `Version ${modelInfo.knowledge_base_version} · Embeddings: ${modelInfo.embedding_model ?? "not configured"}`
+                    : "Knowledge-base configuration unavailable"}
+                </p>
               </div>
             </div>
             <Badge variant="outline" className="gap-1">
               <FileText className="h-3 w-3" />
-              1,247 Documents
+              {modelInfo?.rag_enabled ? "RAG enabled" : "RAG disabled"}
             </Badge>
           </div>
           <div className="text-sm text-muted-foreground">

@@ -42,6 +42,16 @@ def get_llm_provider(request: Request) -> LLMProvider:
     return request.app.state.llm_provider
 
 
+def get_general_llm_provider(request: Request) -> LLMProvider:
+    """Return the base-model provider used for general conversation."""
+    return request.app.state.general_llm_provider
+
+
+def get_srs_llm_provider(request: Request) -> LLMProvider:
+    """Return the configured provider used for requirements-engineering tasks."""
+    return request.app.state.srs_llm_provider
+
+
 async def enforce_request_body_size(request: Request) -> None:
     """Reject request bodies larger than the configured limit (SEC-011).
 

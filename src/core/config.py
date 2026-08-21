@@ -30,6 +30,10 @@ class Settings(BaseSettings):
     frontend_port: int = 5173
     max_request_body_bytes: int = 1_048_576  # SEC-011: 1 MB default
     max_projects: int = 100  # SEC-041: limit total stored projects
+    upload_dir: str = "./data/uploads"
+    max_upload_bytes: int = 10_485_760
+    max_project_documents: int = 5
+    max_project_document_context_chars: int = 12_000
 
     # --- Model variant selection (Phase 8: base vs fine-tuned) ---
     # "base"  = Qwen3-4B-Instruct-2507 (original)
@@ -89,9 +93,9 @@ class Settings(BaseSettings):
             "OLLAMA_TIMEOUT_SECONDS",
         ),
     )
-    # Ollama context window size (num_ctx). Default 16384 to handle long prompts.
+    # Keep the 4B model within its responsive 8K operating range locally.
     ollama_num_ctx: int = Field(
-        default=16384,
+        default=8192,
         validation_alias=AliasChoices(
             "ollama_num_ctx",
             "CYBERSRS_OLLAMA_NUM_CTX",
@@ -126,6 +130,7 @@ class Settings(BaseSettings):
         default=False,
         validation_alias=AliasChoices("rag_enabled", "CYBERSRS_RAG_ENABLED", "RAG_ENABLED"),
     )
+    project_chroma_collection: str = "cybersrs_project_documents"
     # Stable identifier for the currently indexed knowledge-base snapshot.
     # ``unknown`` is explicit for deployments that predate provenance tracking.
     knowledge_base_version: str = Field(
@@ -136,9 +141,10 @@ class Settings(BaseSettings):
             "KNOWLEDGE_BASE_VERSION",
         ),
     )
-    # Bound response length so malformed generations cannot run indefinitely.
+    # A compact complete SRS exceeds 4K tokens, while substantially larger
+    # budgets make the local 4B model too slow on typical development hardware.
     ollama_num_predict: int = Field(
-        default=4096,
+        default=5200,
         validation_alias=AliasChoices(
             "ollama_num_predict",
             "CYBERSRS_OLLAMA_NUM_PREDICT",
@@ -168,9 +174,9 @@ class Settings(BaseSettings):
         validation_alias=AliasChoices(
             "ollama_temperature",
             "CYBERSRS_OLLAMA_TEMPERATURE",
-            "OLLAMA_TEMPERATURE",
         ),
     )
+
     ollama_top_p: float = Field(
         default=0.9,
         gt=0.0,

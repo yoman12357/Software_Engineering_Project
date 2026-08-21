@@ -1,10 +1,34 @@
 """API tests for description analysis and project-context retrieval (Phase 1B)."""
 
+import json
+
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from src.db import models
 from src.db.models import Project
+from src.llm.base import LLMRequest, LLMResponse, LLMTask
+from src.llm.mock_provider import MockLLMProvider
+
+
+class NoGapAnalysisProvider(MockLLMProvider):
+    """Return a complete analysis to exercise mandatory user review."""
+
+    def generate(self, request: LLMRequest) -> LLMResponse:
+        """Return no model gaps for analysis and delegate other tasks."""
+        if request.task != LLMTask.ANALYSIS:
+            return super().generate(request)
+        payload = {
+            "stakeholders": ["Security team"],
+            "assets": ["VPN gateway"],
+            "users": ["Remote employees"],
+            "constraints": ["Local deployment"],
+            "goals": ["Provide zero-trust remote access"],
+            "inferred_categories": ["CAT-06", "CAT-08"],
+            "missing_information": [],
+            "project_summary": "A fully specified zero-trust VPN gateway.",
+        }
+        return LLMResponse(content=json.dumps(payload), model_name=self.model_name)
 
 
 def _create_project(client: TestClient, description: str | None = None) -> str:
@@ -120,3 +144,27 @@ def test_get_context_missing_project_returns_404(client: TestClient) -> None:
     response = client.get("/api/v1/projects/00000000-0000-0000-0000-000000000000/context")
     assert response.status_code == 404
     assert response.json()["error"]["code"] == "project_not_found"
+
+
+def test_complete_analysis_still_requires_clarification_review(
+    client: TestClient, app: FastAPI
+) -> None:
+    """Even a model-reported complete description pauses for user confirmation."""
+    app.state.srs_llm_provider = NoGapAnalysisProvider()
+    project_id = _create_project(
+        client,
+        "Build a fully specified zero-trust VPN gateway for remote employees.",
+    )
+
+    analysed = client.post(f"/api/v1/projects/{project_id}/analyse")
+    assert analysed.status_code == 200
+    body = analysed.json()
+    assert body["has_missing_information"] is True
+    assert body["analysis"]["missing_information"]
+    assert client.get(f"/api/v1/projects/{project_id}").json()["status"] == "clarifying"
+
+    questions = client.post(
+        f"/api/v1/projects/{project_id}/clarifications/generate"
+    )
+    assert questions.status_code == 200
+    assert questions.json()["questions"]

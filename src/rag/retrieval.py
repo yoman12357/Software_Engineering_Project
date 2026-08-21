@@ -70,6 +70,7 @@ class Retriever:
         kb_version: str,
         top_k: int | None = None,
         min_score: float | None = None,
+        filter_metadata: dict[str, Any] | None = None,
     ) -> RetrievalContext:
         """Retrieve relevant chunks for the given project context.
 
@@ -78,6 +79,7 @@ class Retriever:
             kb_version: Knowledge base version identifier.
             top_k: Number of results per query (defaults to settings.rag_top_k).
             min_score: Minimum relevance score threshold (defaults to settings.rag_min_score).
+            filter_metadata: Optional mandatory Chroma metadata filter.
 
         Returns:
             RetrievalContext with retrieved chunks and metadata.
@@ -112,6 +114,7 @@ class Retriever:
             query_embeddings=query_embeddings,
             top_k=top_k,
             min_score=min_score,
+            filter_metadata=filter_metadata,
         )
 
         # Convert to retrieved chunks
@@ -143,6 +146,44 @@ class Retriever:
             total_chunks=len(retrieved_chunks),
             kb_version=kb_version,
             retrieval_time_ms=retrieval_time_ms,
+        )
+
+    def retrieve_for_question(
+        self,
+        question: str,
+        kb_version: str,
+        top_k: int | None = None,
+        min_score: float | None = None,
+    ) -> RetrievalContext:
+        """Retrieve chunks for one conversational question without SRS-section queries."""
+        import time
+
+        start_time = time.perf_counter()
+        result_limit = self._settings.rag_top_k if top_k is None else top_k
+        score_threshold = self._settings.rag_min_score if min_score is None else min_score
+        query_embeddings = self._embedding_provider.embed_sync([question])
+        results = self._chroma.query(
+            query_texts=[question],
+            query_embeddings=query_embeddings,
+            top_k=result_limit,
+            min_score=score_threshold,
+        )
+        chunks = [
+            RetrievedChunk(
+                chunk_id=result.chunk_id,
+                text=result.text,
+                metadata=result.metadata,
+                relevance_score=result.relevance_score,
+                distance=result.distance,
+            )
+            for result in results
+        ]
+        return RetrievalContext(
+            chunks=chunks,
+            query_texts=[question],
+            total_chunks=len(chunks),
+            kb_version=kb_version,
+            retrieval_time_ms=int((time.perf_counter() - start_time) * 1000),
         )
 
     def _build_queries(self, project_context: dict[str, Any]) -> list[str]:

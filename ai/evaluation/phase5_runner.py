@@ -246,7 +246,9 @@ class Phase5EvaluationRunner:
         results: list[dict[str, Any]] = []
         try:
             with TestClient(app) as client:
-                provider = CapturingProvider(app.state.llm_provider)
+                provider = CapturingProvider(app.state.srs_llm_provider)
+                app.state.srs_llm_provider = provider
+                # Keep the legacy state alias aligned for older integrations.
                 app.state.llm_provider = provider
                 for case in cases:
                     results.append(

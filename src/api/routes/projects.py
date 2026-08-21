@@ -7,6 +7,7 @@ the service, and serialises responses.
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
+from ...core.config import Settings
 from ...schemas.project import (
     ProjectCreate,
     ProjectListItem,
@@ -14,25 +15,27 @@ from ...schemas.project import (
     ProjectRead,
     ProjectUpdate,
 )
+from ...services.project_document_service import ProjectDocumentService
 from ...services.project_service import ProjectService
-from ..dependencies import enforce_request_body_size, get_db
+from ..dependencies import enforce_request_body_size, get_app_settings, get_db
 
 router = APIRouter(prefix="/projects", tags=["projects"])
 
 
-def _project_service(db: Session) -> ProjectService:
+def _project_service(db: Session, settings: Settings | None = None) -> ProjectService:
     """Construct a service instance bound to the request session."""
-    return ProjectService(db)
+    return ProjectService(db, settings)
 
 
 @router.post("", response_model=ProjectRead, status_code=status.HTTP_201_CREATED)
 def create_project(
     payload: ProjectCreate,
     db: Session = Depends(get_db),
+    settings: Settings = Depends(get_app_settings),
     _: None = Depends(enforce_request_body_size),
 ) -> ProjectRead:
     """Create a new project from a name and informal description."""
-    project = _project_service(db).create_project(payload)
+    project = _project_service(db, settings).create_project(payload)
     return ProjectRead.model_validate(project)
 
 
@@ -64,6 +67,13 @@ def update_project(
 
 
 @router.delete("/{project_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_project(project_id: str, db: Session = Depends(get_db)) -> None:
+def delete_project(
+    project_id: str,
+    db: Session = Depends(get_db),
+    settings: Settings = Depends(get_app_settings),
+) -> None:
     """Delete a project and all associated data."""
+    document_service = ProjectDocumentService(db, settings)
+    for document in document_service.list_for_project(project_id):
+        document_service.delete(project_id, document.id)
     _project_service(db).delete_project(project_id)

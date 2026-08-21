@@ -6,6 +6,18 @@
 
 ---
 
+## ChatSession and ChatMessage
+
+`ChatSession` stores one resumable conversational workflow. It has an optional
+`project_id`, display name, workflow stage, optional analysis/clarification/SRS
+JSON snapshots, optional SRS-version link, pending project description, pin
+timestamp, and created/updated UTC timestamps. `ChatMessage` stores ordered
+user/assistant messages with message type, validated JSON metadata, and a UTC
+timestamp. Deleting a session deletes its messages; deleting a project deletes
+associated sessions. Sessions without a project remain valid general chats.
+
+---
+
 ## 1. Entity-Relationship Overview
 
 ```mermaid
@@ -14,6 +26,7 @@ erDiagram
     Project ||--|| ProjectDescription : "has description"
     Project ||--o{ ClarificationQuestion : "has questions"
     Project ||--|| ProjectContext : "has context"
+    Project ||--o{ ProjectDocument : "has reference documents"
     ClarificationQuestion ||--o| ClarificationAnswer : "may have answer"
     SRSVersion ||--o{ Requirement : "contains"
     SRSVersion ||--o{ Threat : "contains"
@@ -55,7 +68,7 @@ erDiagram
 
 **Sensitive-data considerations:** Project names may contain organisation names. Do not log in DEBUG.
 
-**Relationships:** Has one `ProjectDescription`, zero or more `SRSVersion`, zero or more `ClarificationQuestion`, one `ProjectContext`.
+**Relationships:** Has one `ProjectDescription`, zero or more `SRSVersion`, `ClarificationQuestion`, and `ProjectDocument` records, and one `ProjectContext`.
 
 ---
 
@@ -387,6 +400,29 @@ artifact content.
 `SRSVersion.model_run_id`, and `Phase5EvaluationRun.model_run_id` are nullable.
 `NULL` means legacy/unknown provenance; the application never invents a model
 or RAG configuration for an older artifact.
+
+---
+
+### 2.17 ProjectDocument
+
+**Purpose:** Metadata and bounded extracted text for a locally uploaded reference file that belongs to exactly one project.
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `id` | UUID (string) | Yes | Generated primary key and Chroma source identifier |
+| `project_id` | UUID (string) | Yes | Foreign key → Project with cascade deletion |
+| `original_filename` | string | Yes | Sanitised display name; never used as the stored filename |
+| `stored_path` | text | Yes | Generated local path under the configured upload root; never returned by the API |
+| `media_type` | string | Yes | Server-approved media type |
+| `file_extension` | string | Yes | Approved parser extension |
+| `file_size_bytes` | integer | Yes | Uploaded byte count |
+| `sha256` | string | Yes | Content-integrity digest |
+| `status` | string | Yes | Processing status (`ready` for completed synchronous ingestion) |
+| `extracted_text` | text | Yes | Locally parsed prompt context; never returned by the metadata API |
+| `chunk_count` | integer | Yes | Number of chunks in the isolated project collection |
+| `created_at` | datetime (UTC) | Yes | Upload timestamp |
+
+Project-document chunks preserve `source_id`, `chunk_index`, page/section, relevance score, `project_id`, and `document_scope=project`. Retrieval from the project collection must always filter by `project_id`.
 
 ---
 

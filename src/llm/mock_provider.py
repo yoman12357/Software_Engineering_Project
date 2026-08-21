@@ -58,6 +58,14 @@ class MockLLMProvider(LLMProvider):
             payload = self._clarification(request.user_content)
         elif request.task == LLMTask.SRS:
             payload = self._srs(request.user_content)
+        elif request.task == LLMTask.CHAT:
+            payload = {
+                "answer": (
+                    "CyberSRS is running with the deterministic mock provider. "
+                    "I can answer cybersecurity questions and help turn a project idea into an SRS."
+                ),
+                "cited_source_ids": [],
+            }
         else:  # pragma: no cover - guarded by the enum above
             raise LLMOutputError(f"unsupported task {request.task}")
 

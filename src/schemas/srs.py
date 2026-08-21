@@ -13,6 +13,7 @@ from __future__ import annotations
 import re
 from datetime import datetime
 from enum import StrEnum
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
@@ -382,6 +383,16 @@ class SRSGenerationResponse(BaseModel):
     status: str
 
 
+class SRSGenerationProgressEvent(BaseModel):
+    """One validated progress event emitted during SRS generation."""
+
+    phase: Literal["preparing", "retrieving", "generating", "validating", "completed", "failed"]
+    progress: int = Field(ge=0, le=100)
+    message: str
+    result: SRSGenerationResponse | None = None
+    error_code: str | None = None
+
+
 class SRSSection(BaseModel):
     """Identifies a section for validation or editing."""
 
@@ -399,6 +410,23 @@ class SRSEditRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     updates: list[SRSSection] = Field(min_length=1)
+
+
+class SRSRegenerateSectionRequest(BaseModel):
+    """Request to regenerate one supported SRS section into a new version."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    section: Literal[
+        "functional_requirements",
+        "non_functional_requirements",
+        "security_requirements",
+        "data_requirements",
+        "network_requirements",
+        "architecture_summary",
+        "threats",
+        "testing_strategy",
+    ]
 
 
 class SRSValidationResponse(BaseModel):

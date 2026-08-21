@@ -10,7 +10,7 @@ from ...schemas.analysis import (
     ProjectContextRead,
 )
 from ...services.analysis_service import AnalysisService
-from ..dependencies import get_app_settings, get_db, get_llm_provider
+from ..dependencies import get_app_settings, get_db, get_srs_llm_provider
 
 router = APIRouter(prefix="/projects", tags=["analysis"])
 
@@ -26,7 +26,7 @@ def _analysis_service(
 def analyse_project(
     project_id: str,
     db: Session = Depends(get_db),
-    provider: LLMProvider = Depends(get_llm_provider),
+    provider: LLMProvider = Depends(get_srs_llm_provider),
     settings: Settings = Depends(get_app_settings),
 ) -> AnalysisResponse:
     """Analyse the project's description and persist the ProjectContext."""
@@ -37,7 +37,7 @@ def analyse_project(
 def get_project_context(
     project_id: str,
     db: Session = Depends(get_db),
-    provider: LLMProvider = Depends(get_llm_provider),
+    provider: LLMProvider = Depends(get_srs_llm_provider),
     settings: Settings = Depends(get_app_settings),
 ) -> ProjectContextRead:
     """Return the latest stored ProjectContext for the project."""

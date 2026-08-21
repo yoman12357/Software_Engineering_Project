@@ -18,8 +18,21 @@ data/
 # Corpus extraction (temporary)
 corpus_extract/
 
+# Local knowledge and fine-tuning corpora
+knowledge/
+fine-tuning/
+
+# Local implementation notes and ad-hoc runtime probes
+1.md
+manual_test.py
+test_add.py
+test_edit.py
+test_edit2.py
+
 # Test / tooling caches
 .pytest_cache/
+.pytest-tmp*/
+.pytest_tmp*/
 .mypy_cache/
 .ruff_cache/
 .coverage
@@ -33,3 +46,9 @@ node_modules/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Local credentials and generated runtime artefacts
+*firebase-adminsdk*.json
+*service-account*.json
+*.log
+*.pdf

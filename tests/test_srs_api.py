@@ -1,12 +1,15 @@
 """API tests for SRS generation, persistence, retrieval, editing, and validation (Phase 1C)."""
 
 import copy
+import json
 
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from sqlalchemy.orm.attributes import flag_modified
 
+from src.core.exceptions import InvalidGeneratedOutputError
 from src.db import models
+from src.services.srs_generation_service import SRSGenerationService
 
 DESCRIPTION = "I want to build a firewall and monitoring system for my college network."
 
@@ -35,6 +38,57 @@ def test_generate_srs_returns_version(client: TestClient) -> None:
     assert body["project_id"] == project_id
     assert body["version_number"] == 1
     assert body["status"] == "generated"
+
+
+def test_generate_srs_stream_emits_validated_progress(client: TestClient) -> None:
+    """The streaming endpoint emits ordered phases and a terminal result."""
+    project_id = _create_analysed_project(client)
+    response = client.post(f"/api/v1/projects/{project_id}/srs/generate/stream")
+
+    assert response.status_code == 200
+    assert response.headers["content-type"].startswith("text/event-stream")
+    events = [
+        json.loads(line.removeprefix("data: "))
+        for line in response.text.splitlines()
+        if line.startswith("data: ")
+    ]
+    assert [event["phase"] for event in events] == [
+        "preparing",
+        "retrieving",
+        "generating",
+        "validating",
+        "completed",
+    ]
+    assert events[-1]["progress"] == 100
+    assert events[-1]["result"]["version_number"] == 1
+
+
+def test_generate_srs_stream_emits_terminal_failure(
+    client: TestClient,
+    monkeypatch,
+) -> None:
+    """A model/schema failure ends the stream with a safe retryable event."""
+    project_id = _create_analysed_project(client)
+
+    def fail_generation(*_args, **_kwargs):
+        raise InvalidGeneratedOutputError()
+
+    monkeypatch.setattr(SRSGenerationService, "generate_srs", fail_generation)
+    response = client.post(f"/api/v1/projects/{project_id}/srs/generate/stream")
+    events = [
+        json.loads(line.removeprefix("data: "))
+        for line in response.text.splitlines()
+        if line.startswith("data: ")
+    ]
+
+    assert response.status_code == 200
+    assert events[-1] == {
+        "phase": "failed",
+        "progress": 100,
+        "message": "The model produced an invalid response.",
+        "result": None,
+        "error_code": "invalid_generated_output",
+    }
 
 
 def test_generate_srs_persists_valid_document(client: TestClient, app: FastAPI) -> None:
@@ -163,6 +217,26 @@ def test_version_history_is_preserved(client: TestClient) -> None:
     versions = client.get(f"/api/v1/projects/{project_id}/srs/versions").json()
     numbers = [v["version_number"] for v in versions["versions"]]
     assert numbers == [2, 1]
+
+
+def test_regenerate_section_creates_new_version_and_preserves_other_sections(
+    client: TestClient,
+) -> None:
+    """Section regeneration creates history instead of overwriting its source."""
+    project_id = _create_analysed_project(client)
+    first = _generate_srs(client, project_id)
+    source = client.get(f"/api/v1/projects/{project_id}/srs/versions/{first['version_id']}").json()
+
+    response = client.post(
+        f"/api/v1/projects/{project_id}/srs/versions/{first['version_id']}/regenerate",
+        json={"section": "security_requirements"},
+    )
+    assert response.status_code == 200
+    regenerated = response.json()
+    assert regenerated["id"] != first["version_id"]
+    assert regenerated["version_number"] == 2
+    assert regenerated["srs"]["functional_requirements"] == source["srs"]["functional_requirements"]
+    assert regenerated["srs"]["metadata"]["version"] == 2
 
 
 def test_get_specific_version(client: TestClient) -> None:

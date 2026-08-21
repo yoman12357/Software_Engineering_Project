@@ -276,6 +276,22 @@ The system must initially support these cybersecurity project types. The categor
 | FR-072 | The system shall include a table of contents, requirement traceability matrix, and references in the PDF. | Should |
 | FR-073 | The system shall generate the PDF from the validated JSON structure, not from raw LLM text. | Must |
 
+### 12.9 Conversational Assistant
+
+| ID | Requirement | Priority |
+|---|---|---|
+| FR-080 | The system shall answer general cybersecurity questions through a conversational interface without automatically creating a project. | Must |
+| FR-081 | The assistant shall use the local RAG knowledge base for relevant questions and return validated source citations. | Must |
+| FR-082 | The system shall preserve a detected project description until the user explicitly confirms SRS generation. | Must |
+| FR-083 | The UI shall retain submitted messages and show a retryable error when chat delivery or generation fails. | Must |
+| FR-084 | General conversation shall use the base main model and shall not require RAG. | Must |
+| FR-085 | Analysis, clarification, SRS generation, and SRS editing shall use the configured SRS-task model variant. | Must |
+| FR-086 | Users shall be able to upload safe PDF, Markdown, text, and CSV reference documents to a project. | Must |
+| FR-087 | Project documents shall inform analysis and SRS generation while remaining isolated from the global knowledge base and other projects. | Must |
+| FR-088 | A project-specific SRS request or requirements document shall immediately enter analysis and clarification review, and generation shall wait for submitted answers. | Must |
+| FR-089 | Users shall be able to permanently delete a locally stored chat, which shall disappear from the sidebar immediately. | Must |
+| FR-090 | Users shall be able to pin and unpin chats, with pinned chats persisted and displayed above date-grouped conversations. | Should |
+
 ---
 
 ## 13. Non-Functional Requirements

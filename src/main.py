@@ -10,9 +10,19 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from .api import errors
-from .api.routes import analysis, clarifications, health, projects, provenance, srs
+from .api.routes import (
+    analysis,
+    chat,
+    clarifications,
+    health,
+    project_documents,
+    projects,
+    provenance,
+    srs,
+)
 from .core.config import Settings, get_settings
 from .core.logging import configure_logging
 from .db.database import Database
@@ -46,6 +56,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         database = Database(app_settings.database_url)
         database.init_db()
         app.state.database = database
+
         yield
         # SQLAlchemy engines are disposed on shutdown for clean process exit.
         database.engine.dispose()
@@ -64,9 +75,32 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     # body-size-limit dependency) reads the same values used at startup.
     app.state.settings = app_settings
 
-    # Phase 1B: build the configured LLM provider once (mock). Phase 2 swaps
-    # this for the Ollama-backed provider behind the same abstraction.
-    app.state.llm_provider = create_llm_provider(app_settings)
+    # General conversation always uses the approved base model. Requirements-
+    # engineering tasks may use the configured fine-tuned variant. Share the
+    # instance when both routes select the base model.
+    general_provider = create_llm_provider(app_settings, model_variant="base")
+    if app_settings.model_variant.strip().lower() == "base":
+        srs_provider = general_provider
+    else:
+        srs_provider = create_llm_provider(app_settings)
+    app.state.general_llm_provider = general_provider
+    app.state.srs_llm_provider = srs_provider
+    # Backward compatibility for integrations that still read this state key.
+    app.state.llm_provider = srs_provider
+
+    # CORS: allow the Vite dev server during local development.
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=[
+            "http://localhost:5173",
+            "http://localhost:5174",
+            "http://127.0.0.1:5173",
+            "http://127.0.0.1:5174",
+        ],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
     # Centralised, safe error handling (SEC-046: no stack traces or internal
     # paths are exposed to clients).
@@ -76,10 +110,12 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     # at /api/v1 so OpenAPI paths are grouped under the version prefix.
     app.include_router(health.router, prefix="/api/v1")
     app.include_router(projects.router, prefix="/api/v1")
+    app.include_router(project_documents.router, prefix="/api/v1")
     app.include_router(analysis.router, prefix="/api/v1")
     app.include_router(clarifications.router, prefix="/api/v1")
     app.include_router(srs.router, prefix="/api/v1")
     app.include_router(provenance.router, prefix="/api/v1")
+    app.include_router(chat.router, prefix="/api/v1")
 
     return app
 

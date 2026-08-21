@@ -18,6 +18,11 @@ from ..rag.chunking import Chunk
 
 logger = logging.getLogger(__name__)
 
+# Chroma 0.5 can invoke an incompatible PostHog client even when anonymized
+# telemetry is disabled. The capture attempt is harmless but otherwise emits
+# misleading ERROR records for every local query.
+logging.getLogger("chromadb.telemetry.product.posthog").setLevel(logging.CRITICAL)
+
 
 @dataclass
 class SearchResult:
@@ -102,6 +107,8 @@ class ChromaDBClient:
             "file_hash_sha256": doc_metadata.get("file_hash_sha256", ""),
             "categories": ",".join(doc_metadata.get("categories", [])),
             "licence_note": doc_metadata.get("license_note", ""),
+            "project_id": doc_metadata.get("project_id", ""),
+            "document_scope": doc_metadata.get("document_scope", "global"),
         }
 
     def _generate_chunk_id(self, source_id: str, chunk_index: int) -> str:
@@ -345,6 +352,44 @@ class ChromaDBClient:
 
         except Exception as e:
             raise ChromaDBError(f"Failed to get source chunks: {e}") from e
+
+    def get_chunks_by_ids(self, chunk_ids: list[str]) -> list[dict]:
+        """Get chunks by their ChromaDB document IDs.
+
+        Args:
+            chunk_ids: List of chunk IDs (``{source_id}_chunk_{index}``).
+
+        Returns:
+            List of chunk dictionaries with ``chunk_id``, ``text`` and
+            ``metadata`` keys, in the same order as requested. Missing IDs are
+            skipped.
+        """
+        if not chunk_ids:
+            return []
+
+        try:
+            results = self._collection.get(
+                ids=chunk_ids,
+                include=["documents", "metadatas"],
+            )
+
+            chunks: list[dict] = []
+            ids_list = results.get("ids") or []
+            docs_list = results.get("documents") or []
+            metas_list = results.get("metadatas") or []
+
+            for i, chunk_id in enumerate(ids_list):
+                chunks.append(
+                    {
+                        "chunk_id": chunk_id,
+                        "text": docs_list[i] if i < len(docs_list) else "",
+                        "metadata": metas_list[i] if i < len(metas_list) else {},
+                    }
+                )
+            return chunks
+
+        except Exception as e:
+            raise ChromaDBError(f"Failed to get chunks by ids: {e}") from e
 
 
 def create_chromadb_client(settings: Settings) -> ChromaDBClient:

@@ -17,7 +17,7 @@ from .registry import resolve_model_name
 SUPPORTED_PROVIDERS: tuple[str, ...] = ("mock", "ollama")
 
 
-def create_llm_provider(settings: Settings) -> LLMProvider:
+def create_llm_provider(settings: Settings, model_variant: str | None = None) -> LLMProvider:
     """Instantiate the LLM provider selected by ``CYBERSRS_LLM_PROVIDER``.
 
     The active model variant (base/finetuned) is resolved from
@@ -26,6 +26,8 @@ def create_llm_provider(settings: Settings) -> LLMProvider:
     Args:
         settings: Application settings; ``llm_provider`` selects the concrete
             implementation and model variant settings select the model.
+        model_variant: Optional task-specific variant override. General chat
+            passes ``base`` while SRS tasks use the configured default.
 
     Returns:
         A configured provider instance.
@@ -35,14 +37,19 @@ def create_llm_provider(settings: Settings) -> LLMProvider:
             or the model variant configuration is invalid.
     """
     provider_name = settings.llm_provider.strip().lower()
+    provider_settings = (
+        settings.model_copy(update={"model_variant": model_variant})
+        if model_variant is not None
+        else settings
+    )
     if provider_name == "mock":
         return MockLLMProvider()
 
     if provider_name == "ollama":
         # Resolve model name from variant; raises ValueError if invalid.
-        model_name = resolve_model_name(settings)
+        model_name = resolve_model_name(provider_settings)
         # Create updated settings with the resolved model name
-        settings_dict = settings.model_dump(exclude={"model_name"})
+        settings_dict = provider_settings.model_dump(exclude={"model_name"})
         updated_settings = Settings(**settings_dict, model_name=model_name)
         return SyncOllamaQwenProvider(updated_settings)
 

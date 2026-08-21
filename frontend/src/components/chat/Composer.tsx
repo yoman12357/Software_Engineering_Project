@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, FormEvent } from "react";
 import { cn } from "../../lib/utils";
-import { Send, X, Mic, Paperclip } from "lucide-react";
+import { ArrowUp, Paperclip, X } from "lucide-react";
 
 interface ComposerProps {
   disabled?: boolean;
@@ -10,18 +10,24 @@ interface ComposerProps {
   placeholder?: string;
   value?: string;
   onValueChange?: (value: string) => void;
+  attachments?: File[];
+  onFilesSelected?: (files: File[]) => void | Promise<void>;
+  onRemoveAttachment?: (index: number) => void;
 }
 
 export function Composer({
   disabled = false,
   onSend,
-  placeholder = "Describe your cybersecurity project...",
+  placeholder = "Message CyberSRS...",
   value: controlledValue,
   onValueChange,
+  attachments = [],
+  onFilesSelected,
+  onRemoveAttachment,
 }: ComposerProps) {
   const [internalValue, setInternalValue] = useState("");
-  const [height, setHeight] = useState(44);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [isComposing, setIsComposing] = useState(false);
   const value = controlledValue ?? internalValue;
   const setValue = onValueChange ?? setInternalValue;
@@ -30,7 +36,7 @@ export function Composer({
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
       const newHeight = Math.min(textareaRef.current.scrollHeight, 200);
-      setHeight(newHeight);
+      textareaRef.current.style.height = `${newHeight}px`;
     }
   }, [value]);
 
@@ -39,7 +45,7 @@ export function Composer({
     const trimmed = value.trim();
     if (!trimmed || disabled) return;
     setValue("");
-    setHeight(44);
+    if (textareaRef.current) textareaRef.current.style.height = "auto";
     await onSend(trimmed);
   };
 
@@ -49,89 +55,109 @@ export function Composer({
       const trimmed = value.trim();
       if (trimmed && !disabled) {
         setValue("");
-        setHeight(44);
+        if (textareaRef.current) textareaRef.current.style.height = "auto";
         onSend(trimmed);
       }
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setValue(e.target.value);
-  };
-
   return (
-    <form onSubmit={handleSubmit} className="w-full">
-      <div className="relative">
-        <div className="flex items-end gap-2 p-3 bg-card border border-border rounded-xl">
+    <div className="w-full max-w-[768px] mx-auto px-4 pb-4">
+      <form
+        onSubmit={handleSubmit}
+        className="relative"
+        onDragOver={(event) => event.preventDefault()}
+        onDrop={(event) => {
+          event.preventDefault();
+          if (!disabled && event.dataTransfer.files.length) {
+            void onFilesSelected?.(Array.from(event.dataTransfer.files));
+          }
+        }}
+      >
+        {attachments.length > 0 && (
+          <div className="mb-2 flex flex-wrap gap-2" aria-label="Pending attachments">
+            {attachments.map((file, index) => (
+              <span key={`${file.name}-${file.size}-${index}`} className="flex max-w-full items-center gap-2 rounded-lg border border-[#424242] bg-[#2f2f2f] px-3 py-2 text-xs text-white">
+                <Paperclip className="h-3.5 w-3.5 shrink-0" />
+                <span className="max-w-48 truncate">{file.name}</span>
+                <button type="button" aria-label={`Remove ${file.name}`} onClick={() => onRemoveAttachment?.(index)} className="text-[#b4b4b4] hover:text-white">
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              </span>
+            ))}
+          </div>
+        )}
+        <div
+          className={cn(
+            "flex items-end rounded-2xl border transition-all duration-200",
+            "bg-[#2f2f2f] border-[#424242]",
+            "focus-within:border-[#676767]",
+            disabled && "opacity-50 pointer-events-none"
+          )}
+        >
+          {onFilesSelected && (
+            <>
+              <input
+                ref={fileInputRef}
+                type="file"
+                multiple
+                accept=".pdf,.md,.markdown,.txt,.csv"
+                className="hidden"
+                onChange={(event) => {
+                  const files = Array.from(event.target.files ?? []);
+                  if (files.length) void onFilesSelected(files);
+                  event.target.value = "";
+                }}
+              />
+              <button
+                type="button"
+                disabled={disabled}
+                onClick={() => fileInputRef.current?.click()}
+                aria-label="Attach project documents"
+                title="Attach PDF, Markdown, text, or CSV"
+                className="m-2 mr-0 rounded-full p-1.5 text-[#b4b4b4] hover:bg-[#424242] hover:text-white"
+              >
+                <Paperclip className="h-4 w-4" />
+              </button>
+            </>
+          )}
           <textarea
             ref={textareaRef}
             value={value}
-            onChange={handleChange}
+            onChange={(e) => setValue(e.target.value)}
             onKeyDown={handleKeyDown}
             onCompositionStart={() => setIsComposing(true)}
             onCompositionEnd={() => setIsComposing(false)}
             placeholder={placeholder}
             disabled={disabled}
-            className={cn(
-              "w-full resize-none bg-transparent placeholder:text-muted-foreground",
-              "text-sm leading-relaxed",
-              "focus:outline-none",
-              "disabled:opacity-50 disabled:cursor-not-allowed",
-              "min-h-[44px] max-h-[200px]"
-            )}
-            style={{ height: height }}
             rows={1}
             aria-label="Message input"
-          />
-        </div>
-
-        <div className="flex items-center justify-between px-3 pb-3">
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-              disabled={disabled}
-              aria-label="Attach file"
-            >
-              <Paperclip className="h-5 w-5" />
-            </button>
-            <button
-              type="button"
-              className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-              disabled={disabled}
-              aria-label="Voice input"
-            >
-              <Mic className="h-5 w-5" />
-            </button>
-          </div>
-
-          <div className="flex items-center gap-2">
-            {value.trim() && (
-              <button
-                type="button"
-                onClick={() => setValue("")}
-                className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-                aria-label="Clear input"
-              >
-                <X className="h-5 w-5" />
-              </button>
+            className={cn(
+              "flex-1 bg-transparent text-[15px] text-white placeholder:text-[#8e8e8e]",
+              "px-4 py-3 resize-none focus:outline-none",
+              "min-h-[44px] max-h-[200px]"
             )}
-            <button
-              type="submit"
-              disabled={disabled || !value.trim()}
-              className={cn(
-                "p-2.5 rounded-lg transition-all duration-200",
-                "bg-primary text-primary-foreground hover:bg-primary-hover",
-                "disabled:opacity-50 disabled:cursor-not-allowed",
-                "focus-ring"
-              )}
-              aria-label="Send message"
-            >
-              <Send className="h-5 w-5" />
-            </button>
-          </div>
+          />
+          <button
+            type="submit"
+            disabled={disabled || !value.trim()}
+            aria-label="Send message"
+            className={cn(
+              "flex-shrink-0 m-2 p-1.5 rounded-full transition-colors",
+              value.trim()
+                ? "bg-white text-black hover:bg-gray-200"
+                : "bg-[#616161] text-[#b4b4b4] cursor-not-allowed"
+            )}
+          >
+            <ArrowUp className="h-4 w-4" />
+          </button>
         </div>
-      </div>
-    </form>
+      </form>
+      <p className="text-center text-xs text-[#8e8e8e] mt-2">
+        CyberSRS can make mistakes. Consider verifying important information.
+      </p>
+    </div>
   );
 }
+
+export default Composer;

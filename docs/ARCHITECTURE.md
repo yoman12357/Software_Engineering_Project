@@ -89,6 +89,7 @@ graph TB
         SVC_VALID["Requirement Validation Service"]
         SVC_THREAT["Threat-Model Service"]
         SVC_PDF["PDF Generation Service"]
+        SVC_CHAT["Conversational Chat Service"]
         SVC_EVAL["Evaluation Subsystem"]
     end
 
@@ -121,6 +122,7 @@ graph TB
     API --> SVC_VALID
     API --> SVC_THREAT
     API --> SVC_PDF
+    API --> SVC_CHAT
     API --> SVC_EVAL
 
     SVC_ANALYSIS --> LLM_IF
@@ -128,6 +130,8 @@ graph TB
     SVC_SRS --> LLM_IF
     SVC_VALID --> LLM_IF
     SVC_THREAT --> LLM_IF
+    SVC_CHAT --> LLM_IF
+    SVC_CHAT --> SVC_RAG
 
     SVC_SRS --> SVC_RAG
     SVC_RAG --> KI_CHROMA
@@ -154,6 +158,9 @@ graph TB
 | **Requirement Validation Service** | Validates SRS for completeness, testability, consistency (mix of deterministic rules and LLM-assisted checks) | Hybrid |
 | **Threat-Model Service** | Calls the LLM to generate threats and mitigations for the project | Generative |
 | **PDF Generation Service** | Renders validated JSON into a PDF using templates | Deterministic |
+| **Conversational Chat Service** | Classifies explicit workflow commands, retrieves local knowledge, and returns schema-validated answers with citations | Hybrid |
+| **Task-Aware Provider Router** | Keeps general chat on the base Qwen model while routing requirements-engineering tasks to the configured base or fine-tuned variant | Deterministic |
+| **Project Document Service** | Validates, stores, parses, chunks, indexes, lists, and deletes local project reference files | Deterministic |
 | **Evaluation Subsystem** | Compares base-model and fine-tuned outputs on a reference dataset | Deterministic |
 | **LLM Provider Interface** | Abstract interface for LLM calls; provider-independent | Deterministic |
 | **Ollama Provider** | Concrete implementation of the LLM interface for Ollama | Deterministic |
@@ -161,6 +168,10 @@ graph TB
 | **Knowledge Ingestion Pipeline** | CLI tool to chunk, embed, and store documents in ChromaDB | Deterministic |
 | **ChromaDB Client** | Wrapper around ChromaDB operations (query, add, delete) | Deterministic |
 | **SQLite Repository Layer** | Data-access layer for all SQLite operations | Deterministic |
+
+General chat and SRS tasks use the same provider abstraction but separate configured instances. The general instance always selects the approved base Qwen model. The SRS instance selects `CYBERSRS_MODEL_VARIANT`, allowing a future QLoRA-derived Ollama model to improve analysis, clarification, generation, and editing without narrowing general chat.
+
+Uploaded documents are stored under the configured local upload root using generated names. Their metadata and bounded extracted text are stored in SQLite, and their chunks are written to a separate ChromaDB collection with a mandatory `project_id` filter. They are never inserted into the global cybersecurity knowledge collection.
 
 ---
 

@@ -34,6 +34,23 @@ class ProjectNotFoundError(NotFoundError):
     message = "Project not found."
 
 
+class ChatSessionNotFoundError(NotFoundError):
+    """Raised when a locally persisted chat session does not exist."""
+
+    code = "chat_session_not_found"
+    message = "Chat session not found."
+
+
+class ProjectLimitError(ApiError):
+    """Raised when project creation exceeds the configured local storage limit."""
+
+    status_code = 409
+    code = "project_limit_reached"
+    message = (
+        "The maximum project limit has been reached. Delete an existing project and try again."
+    )
+
+
 class BadRequestError(ApiError):
     """Raised when a request is invalid (HTTP 400)."""
 
@@ -139,3 +156,34 @@ class BodyTooLargeError(ApiError):
     status_code = 413
     code = "request_body_too_large"
     message = "The request body exceeds the maximum allowed size (CYBERSRS_MAX_REQUEST_BODY_BYTES)."
+
+
+class ProjectDocumentNotFoundError(NotFoundError):
+    """Raised when a project document does not exist."""
+
+    code = "project_document_not_found"
+    message = "Project document not found."
+
+
+class ProjectDocumentLimitError(ApiError):
+    """Raised when a project upload exceeds a configured resource limit."""
+
+    status_code = 413
+    code = "project_document_limit"
+    message = "The project document exceeds a configured upload limit."
+
+
+class UnsupportedProjectDocumentError(ApiError):
+    """Raised when an uploaded file has an unsupported or mismatched type."""
+
+    status_code = 415
+    code = "unsupported_project_document"
+    message = "The uploaded document type is not supported."
+
+
+class InvalidProjectDocumentError(ApiError):
+    """Raised when a supported uploaded document cannot be safely parsed."""
+
+    status_code = 422
+    code = "invalid_project_document"
+    message = "The uploaded document could not be parsed."

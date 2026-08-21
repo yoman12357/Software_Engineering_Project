@@ -104,6 +104,7 @@
 **Errors:**
 
 - 400: `name` or `description` fails validation.
+- 409: `project_limit_reached` — the configured `CYBERSRS_MAX_PROJECTS` limit has been reached; the user must delete an existing project before creating another.
 
 ---
 
@@ -197,6 +198,24 @@ Both fields are optional. Only provided fields are updated.
 **Errors:**
 
 - 404: Project not found.
+
+---
+
+### `POST /api/v1/projects/{id}/documents`
+
+**Purpose:** Upload one local reference file for a project as `multipart/form-data` field `file`. Supported extensions are `.pdf`, `.md`, `.markdown`, `.txt`, and `.csv`. The server enforces configured per-file and per-project limits, generates the stored filename, parses the content locally, and isolates any vector chunks by project ID.
+
+**Response (201):** document metadata including `id`, `project_id`, `original_filename`, `media_type`, `file_size_bytes`, `sha256`, `status`, `chunk_count`, and timestamps. Extracted text and server paths are never returned.
+
+### `GET /api/v1/projects/{id}/documents`
+
+**Purpose:** List uploaded reference-document metadata for a project.
+
+### `DELETE /api/v1/projects/{id}/documents/{document_id}`
+
+**Purpose:** Delete the document record, generated local file, and project-scoped vector chunks.
+
+**Errors:** 404 for a missing project/document; 413 for file/count limits; 415 for an unsupported or mismatched file type; 422 when safe parsing fails.
 
 ---
 
@@ -624,38 +643,9 @@ Both fields are optional. Only provided fields are updated.
 
 ## 7. Section Regeneration
 
-### `POST /api/v1/projects/{project_id}/srs/{version_id}/regenerate`
-
-**Purpose:** Regenerate one or more specific sections of the SRS without regenerating the entire document.
-
-**Request:**
-
-```json
-{
-  "sections": ["security_requirements", "threat_model"]
-}
-```
-
-**Validation:**
-
-- `sections` must contain valid section names from the SRS JSON schema.
-
-**Response (202):**
-
-```json
-{
-  "srs_version_id": "uuid",
-  "generation_run_id": "uuid",
-  "sections_regenerating": ["security_requirements", "threat_model"],
-  "status": "in_progress"
-}
-```
-
-**Errors:**
-
-- 400: Invalid section name.
-- 404: SRS version not found.
-- 503: LLM unreachable.
+The implemented single-section, version-preserving contract is documented under
+`POST /api/v1/projects/{id}/srs/versions/{vid}/regenerate` below. It returns the
+validated new `SRSVersionRead` synchronously and never mutates the source version.
 
 ---
 
@@ -695,80 +685,23 @@ Both fields are optional. Only provided fields are updated.
 
 ## 9. PDF Export
 
-### `POST /api/v1/projects/{project_id}/srs/{version_id}/export`
+### `GET /api/v1/projects/{project_id}/srs/versions/{version_id}/export/pdf`
 
-**Purpose:** Generate and export the SRS as a PDF.
+**Purpose:** Deterministically render a validated stored SRS version as a PDF.
 
 **Request:** No body.
 
-**Response (200):**
-
-```json
-{
-  "srs_version_id": "uuid",
-  "export": {
-    "id": "uuid",
-    "file_path": "/data/exports/campus-firewall-v1.pdf",
-    "file_size_bytes": 245760,
-    "download_url": "/api/v1/exports/uuid/download",
-    "exported_at": "2026-01-01T00:00:00Z"
-  }
-}
-```
+**Response (200):** Binary PDF file (`Content-Type: application/pdf`) with a
+content-disposition filename.
 
 **Errors:**
 
 - 404: SRS version not found.
-- 400: SRS version has not been validated.
 - 500: PDF generation failed.
 
 ---
 
-### `GET /api/v1/exports/{export_id}/download`
-
-**Purpose:** Download the exported PDF file.
-
-**Response (200):** Binary PDF file (`Content-Type: application/pdf`).
-
-**Errors:**
-
-- 404: Export not found.
-
----
-
-## 10. Generation-Run Status
-
-### `GET /api/v1/generation-runs/{run_id}`
-
-**Purpose:** Check the status of a long-running generation or regeneration.
-
-**Response (200):**
-
-```json
-{
-  "id": "uuid",
-  "srs_version_id": "uuid",
-  "status": "in_progress",
-  "model_name": "qwen3:4b",
-  "adapter_name": null,
-  "current_step": "Generating security requirements...",
-  "steps_completed": 4,
-  "steps_total": 7,
-  "generation_time_seconds": 120.5,
-  "retry_count": 0,
-  "created_at": "2026-01-01T00:00:00Z"
-}
-```
-
-**Status values:** `pending`, `in_progress`, `success`, `partial_failure`, `failure`.
-
-**Errors:**
-
-- 404: Generation run not found.
-
----
-
-## 11. Experiment and Model Provenance
+## 10. Experiment and Model Provenance
 
 ### `GET /api/v1/system/model-info`
 
@@ -849,7 +782,76 @@ timing values.
 
 ---
 
-## 12. Endpoint Summary
+## 12. Conversational Assistant
+
+### `POST /api/v1/chat/completions`
+
+**Purpose:** Answer a conversational cybersecurity question through the configured `LLMProvider` with optional local RAG context. The generated payload and every citation are validated before return. This endpoint does not create projects.
+
+**Request:**
+
+```json
+{
+  "messages": [
+    {"role": "user", "content": "What controls should a zero-trust VPN use?"}
+  ],
+  "project_id": null
+}
+```
+
+**Response (200):**
+
+```json
+{
+  "content": "A zero-trust VPN should combine identity, device, and session controls...",
+  "is_project_description": false,
+  "model_name": "qwen3:4b-instruct-2507-q4_K_M",
+  "rag_enabled": true,
+  "citations": [
+    {
+      "source_id": "chunk-id",
+      "source_document_id": "document-id",
+      "document_title": "NIST publication",
+      "chunk_index": 1,
+      "page_or_section": "Access control",
+      "relevance_score": 0.82
+    }
+  ],
+  "warnings": []
+}
+```
+
+RAG failure alone does not fail the request and is reported in `warnings`.
+
+### `POST /api/v1/chat/intent`
+
+**Purpose:** Deterministically classify explicit chat workflow commands such as a project description, SRS generation, or SRS modification.
+
+The request may include `workflow_stage` so deterministic routing can treat a numbered answer set as `clarification` while a project is awaiting answers. The `intent` value may be `general_question`, `project_description`, `srs_project_request`, `srs_generation`, `srs_modification`, or `clarification`. `srs_project_request` means the same message contains both a project-specific description/document and an explicit SRS or requirements-document signal; clients must create the project, analyse it, present clarification review, and wait for answers before generation. A bare command such as `generate SRS` remains `srs_generation` and uses previously retained project context or attached project files. Prefixing a message with `ask:` while clarifying explicitly routes it as a general question.
+
+### Chat-session persistence
+
+Chat state is persisted locally in SQLite through these endpoints. Session payloads contain the workflow stage, optional project/SRS snapshots, and ordered messages. No cloud service is contacted.
+
+- `GET /api/v1/chat/sessions?limit=50` lists sessions with pinned sessions first and then newest activity.
+- `PUT /api/v1/chat/sessions/{session_id}` creates or replaces a complete session snapshot.
+- `GET /api/v1/chat/sessions/{session_id}` restores one complete session.
+- `PATCH /api/v1/chat/sessions/{session_id}` updates `name` and/or `pinned`.
+- `DELETE /api/v1/chat/sessions/{session_id}` permanently removes the session and its messages.
+
+Missing sessions return `404 chat_session_not_found`. Session IDs are client-generated local identifiers; timestamps are assigned by the backend.
+
+### `POST /api/v1/projects/{id}/srs/generate/stream`
+
+Streams schema-validated Server-Sent Events for deterministic generation phases. Events contain `phase`, `progress`, and `message`; the terminal `completed` event additionally contains the validated `SRSGenerationResponse`. If generation fails after bounded correction attempts, a terminal `failed` event contains a safe `error_code` and user-facing message so the UI can stop waiting and offer Retry. Raw LLM tokens, validation details, or unvalidated model output are never streamed. Closing the client connection cancels delivery; the UI may retry safely to create a new version.
+
+### `POST /api/v1/projects/{id}/srs/versions/{vid}/regenerate`
+
+Regenerates one supported SRS section and creates a new immutable version. The request contains a `section` selected from the five requirement sections, `architecture_summary`, `threats`, or `testing_strategy`. Non-targeted content is copied from the source version, while metadata and provenance describe the new generation.
+
+---
+
+## 13. Endpoint Summary
 
 | Method | Path                                                | Purpose                          | Phase |
 | ------ | --------------------------------------------------- | -------------------------------- | ----- |
@@ -859,6 +861,9 @@ timing values.
 | GET    | `/api/v1/projects/{id}`                             | Get project                      | 1     |
 | PUT    | `/api/v1/projects/{id}`                             | Update project                   | 1     |
 | DELETE | `/api/v1/projects/{id}`                             | Delete project                   | 1     |
+| POST   | `/api/v1/projects/{id}/documents`                   | Upload project reference file    | SRS   |
+| GET    | `/api/v1/projects/{id}/documents`                   | List project reference files     | SRS   |
+| DELETE | `/api/v1/projects/{id}/documents/{document_id}`     | Delete project reference file    | SRS   |
 | POST   | `/api/v1/projects/{id}/analyse`                     | Analyse description              | 1B    |
 | GET    | `/api/v1/projects/{id}/context`                     | Get stored project context       | 1B    |
 | POST   | `/api/v1/projects/{id}/clarifications/generate`     | Generate clarification questions | 1B    |
@@ -870,10 +875,16 @@ timing values.
 | GET    | `/api/v1/projects/{id}/srs/versions/{vid}`          | Get specific SRS version         | 1C    |
 | PUT    | `/api/v1/projects/{id}/srs/versions/{vid}`          | Update SRS (validated edit)      | 1C    |
 | POST   | `/api/v1/projects/{id}/srs/versions/{vid}/validate` | Validate SRS (deterministic)     | 1C    |
-| POST   | `/api/v1/projects/{id}/srs/{vid}/regenerate`        | Regenerate sections              | 6     |
-| GET    | `/api/v1/projects/{id}/srs/{vid}/sources`           | Get source references            | 4     |
-| POST   | `/api/v1/projects/{id}/srs/{vid}/export`            | Export PDF                       | 6     |
-| GET    | `/api/v1/exports/{eid}/download`                    | Download PDF                     | 6     |
-| GET    | `/api/v1/generation-runs/{rid}`                     | Generation-run status            | 3     |
+| GET    | `/api/v1/projects/{id}/srs/versions/{vid}/sources`  | Get source references            | 4     |
+| GET    | `/api/v1/projects/{id}/srs/versions/{vid}/export/pdf` | Export PDF                     | 6     |
 | GET    | `/api/v1/system/model-info`                          | Safe active model/RAG information | Provenance |
 | GET    | `/api/v1/projects/{id}/srs/versions/{vid}/provenance` | Inspect SRS model-run provenance | Provenance |
+| POST   | `/api/v1/chat/completions`                           | Validated RAG-grounded chat answer | Chat |
+| POST   | `/api/v1/chat/intent`                                | Classify chat workflow intent | Chat |
+| GET    | `/api/v1/chat/sessions`                              | List persisted chat sessions | Chat |
+| PUT    | `/api/v1/chat/sessions/{id}`                         | Create or replace a chat session | Chat |
+| GET    | `/api/v1/chat/sessions/{id}`                         | Restore a chat session | Chat |
+| PATCH  | `/api/v1/chat/sessions/{id}`                         | Rename or pin a chat session | Chat |
+| DELETE | `/api/v1/chat/sessions/{id}`                         | Permanently delete a chat session | Chat |
+| POST   | `/api/v1/projects/{id}/srs/generate/stream`           | Stream validated SRS generation progress | SRS |
+| POST   | `/api/v1/projects/{id}/srs/versions/{vid}/regenerate` | Regenerate one section into a new version | SRS |

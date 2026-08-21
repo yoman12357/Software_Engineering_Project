@@ -15,7 +15,7 @@ from ..dependencies import (
     enforce_request_body_size,
     get_app_settings,
     get_db,
-    get_llm_provider,
+    get_srs_llm_provider,
 )
 
 router = APIRouter(prefix="/projects", tags=["clarifications"])
@@ -35,7 +35,7 @@ def _clarification_service(
 def generate_clarification_questions(
     project_id: str,
     db: Session = Depends(get_db),
-    provider: LLMProvider = Depends(get_llm_provider),
+    provider: LLMProvider = Depends(get_srs_llm_provider),
     settings: Settings = Depends(get_app_settings),
 ) -> ClarificationQuestionListResponse:
     """Generate (or regenerate) clarification questions for a project."""
@@ -49,7 +49,7 @@ def generate_clarification_questions(
 def get_clarification_questions(
     project_id: str,
     db: Session = Depends(get_db),
-    provider: LLMProvider = Depends(get_llm_provider),
+    provider: LLMProvider = Depends(get_srs_llm_provider),
     settings: Settings = Depends(get_app_settings),
 ) -> ClarificationQuestionListResponse:
     """Return generated clarification questions with any saved answers."""
@@ -64,7 +64,7 @@ def submit_clarification_answers(
     project_id: str,
     payload: ClarificationAnswerSubmission,
     db: Session = Depends(get_db),
-    provider: LLMProvider = Depends(get_llm_provider),
+    provider: LLMProvider = Depends(get_srs_llm_provider),
     settings: Settings = Depends(get_app_settings),
     _: None = Depends(enforce_request_body_size),
 ) -> ClarificationAnswerSubmissionResponse:

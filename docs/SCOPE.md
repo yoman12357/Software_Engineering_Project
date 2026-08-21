@@ -28,6 +28,9 @@ The Minimum Viable Product delivers a locally deployable, end-to-end workflow wh
 | **Fine-tuning** | Prepare a dataset; perform QLoRA fine-tuning of the main LLM; load the adapter at inference time. |
 | **Evaluation** | Compare base-model output against fine-tuned output on a reference dataset. |
 | **Local-first deployment** | All components (frontend, backend, LLM, ChromaDB, SQLite) run on a single machine. |
+| **Conversational assistant** | General cybersecurity questions, RAG-grounded answers with citations, and explicit handoff from a preserved project description into the SRS workflow. |
+| **Task-aware model routing** | Use the base Qwen model for general chat and the configured base/fine-tuned Qwen variant only for requirements-engineering tasks. |
+| **Project reference documents** | Upload, parse, list, use, and delete project-scoped PDF, Markdown, text, and CSV files within local safety limits. |
 
 ### 1.2 MVP Technical Boundaries
 

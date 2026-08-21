@@ -13,5 +13,5 @@ export { ThemeToggle, ThemeToggleCompact } from "./ThemeToggle";
 export { Tabs, TabsList, TabsTrigger, TabsContent } from "./Tabs";
 export { Avatar } from "./Avatar";
 export { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuLabel, DropdownMenuGroup, DropdownMenuSub } from "./DropdownMenu";
-export { Skeleton, SkeletonText, SkeletonCard, SkeletonChatMessage } from "./Skeleton";
+export { Skeleton, MessageSkeleton, SkeletonLoader, DashboardSkeleton } from "./Skeleton";
 export { Toggle } from "./Toggle";

@@ -8,7 +8,8 @@ caller-visible method.
 
 from sqlalchemy.orm import Session
 
-from ..core.exceptions import ProjectNotFoundError
+from ..core.config import Settings, get_settings
+from ..core.exceptions import ProjectLimitError, ProjectNotFoundError
 from ..db.models import Project
 from ..repositories.project_repository import ProjectRepository
 from ..schemas.project import ProjectCreate, ProjectUpdate, generate_uuid
@@ -17,19 +18,25 @@ from ..schemas.project import ProjectCreate, ProjectUpdate, generate_uuid
 class ProjectService:
     """Operations that implement the project-management use cases."""
 
-    def __init__(self, session: Session) -> None:
+    def __init__(self, session: Session, settings: Settings | None = None) -> None:
         self._session = session
         self._repository = ProjectRepository(session)
+        self._settings = settings or get_settings()
 
     def create_project(self, data: ProjectCreate) -> Project:
         """Create and persist a new project.
 
-        Args:
-            data: Validated request payload.
-
-        Returns:
-            The persisted :class:`Project`.
+        Raises:
+            ProjectLimitError: If max_projects limit (SEC-041) is reached.
         """
+        if self._settings.max_projects > 0:
+            current_count = len(self._repository.list_all())
+            if current_count >= self._settings.max_projects:
+                raise ProjectLimitError(
+                    f"Maximum project limit ({self._settings.max_projects}) reached. "
+                    "Delete an existing project from the Dashboard and try again."
+                )
+
         project = Project(
             id=generate_uuid(),
             name=data.name,
